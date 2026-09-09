@@ -1,6 +1,6 @@
 # CyberQuest 2.0 交接文档
 
-最后更新：2026-09-09（第六阶段：安全 Socket.IO 实时事件）
+最后更新：2026-09-09（第七阶段：API 文档与可重复验收）
 
 ## 当前目标
 
@@ -54,6 +54,13 @@
 - 共享包提供实时事件类型；前端登录后可选连接、退出时断开，连接失败平稳维持 REST 功能并显示连接状态。
 - README 已记录事件命名空间、安全边界与 Redis/Docker 尚未接入的事实。
 
+### 第七阶段：API 文档与可重复验收（本次完成，待推送）
+
+- 新增 `docs/openapi.json`（OpenAPI 3.1）：覆盖所有已实现 REST 路径、JWT 安全方案、请求限制、标准错误包络，并在扩展字段记录 `/events` 事件契约。
+- 新增 `docs/ERROR_CODES.md`：列出应用错误码、客户端处置方式以及 Socket 握手/隐私安全边界。
+- 新增 `scripts/verify-local.mjs` 与 `pnpm verify:local`：构建后临时启动 3100 端口，自动检查 REST、Flag 泄漏、DTO 白名单、课程契约、Socket 私有事件和无效 JWT 断开，然后清理服务进程。
+- README 新增验证命令和文档入口。
+
 ## 本次验证
 
 - `corepack pnpm --filter @cyberquest/server exec prisma validate`：通过（临时 PostgreSQL 连接串，仅校验模型，不连接数据库）。
@@ -67,6 +74,7 @@
 - 学习中心回归：demo 登录后返回 3 条课程；首条课程具有配套挑战、3 个章节与数值进度。
 - `corepack pnpm build`、`db:check`、`db:validate`、明文 Flag 扫描和 `git diff --check` 均通过。
 - 实时回归：有效 JWT 收到私有 `lab.status`（`RUNNING`）事件；伪造 JWT 被 Socket.IO 服务器断开；事件字段扫描确认没有 Flag、哈希或 Token。
+- `docs/openapi.json` 已用 JSON 解析验证；`corepack pnpm verify:local` 成功，报告 6 道题、5 条技能、3 条课程和认证私有实时事件；3100 端口无残留监听。
 - 还没有可用 PostgreSQL，因此 Prisma 分支只完成编译/Schema/种子检查，尚未做真实数据库集成验证。
 
 ## GitHub 状态
@@ -78,6 +86,7 @@
 - 第三阶段提交 `ab1cac6` 与第四阶段提交 `0d9ef3d` 已成功推送到 `origin/main`；此前 HTTPS 连接重置的问题已在重试后恢复。
 - 第五阶段提交 `eb528c6` 已成功推送到 `origin/main`。
 - 第六阶段会作为独立提交推送到同一分支。
+- 工作区的 `workspace-preview.png` 既有删除状态仍未被恢复、删除或提交。
 - 工作区发现 `workspace-preview.png` 的既有删除状态，本阶段不会恢复、删除或提交它。
 - 当前仓库专用提交身份：`Codex <codex@local>`，没有修改全局 Git 设置。
 
@@ -90,7 +99,7 @@
 
 ## 下一位执行者从这里开始
 
-1. 补充 OpenAPI/错误码/环境变量文档，并将验证过程自动化为可重复脚本。
+1. 为管理侧题目/课程/用户 API 与前端管理页建立功能闭环，复用安全 DTO 与审计记录。
 2. 获得 PostgreSQL 环境后，执行 `db:push` / `db:seed`，并对 Prisma 分支做认证、解题并发、提示、会话与排行榜集成测试；再生成正式 migration。
 3. 继续把仓储内部的 `Record<string, any>` 限缩到领域 DTO，优先处理本地 JSON 实现。
 4. 用户确认 Docker 条件后，再运行 PostgreSQL/Redis、生成迁移并验证 compose；不要提前宣称容器化可用。

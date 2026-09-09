@@ -1,0 +1,92 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CyberQuest 2.0 API",
+    "version": "2.0.0-local",
+    "description": "Safety-first CTF learning API. Flags, flag hashes, access tokens, and private lab details are never exposed to unrelated clients."
+  },
+  "servers": [{ "url": "http://localhost:3000/api", "description": "Local development" }],
+  "security": [{ "bearerAuth": [] }],
+  "paths": {
+    "/health": { "get": { "operationId": "health", "security": [], "responses": { "200": { "description": "Service is healthy" } } } },
+    "/auth/login": { "post": { "operationId": "login", "security": [], "requestBody": { "$ref": "#/components/requestBodies/Login" }, "responses": { "200": { "$ref": "#/components/responses/Auth" }, "400": { "$ref": "#/components/responses/Error" }, "401": { "$ref": "#/components/responses/Error" }, "429": { "$ref": "#/components/responses/Error" } } } },
+    "/auth/register": { "post": { "operationId": "register", "security": [], "requestBody": { "$ref": "#/components/requestBodies/Register" }, "responses": { "200": { "$ref": "#/components/responses/Auth" }, "400": { "$ref": "#/components/responses/Error" }, "409": { "$ref": "#/components/responses/Error" }, "429": { "$ref": "#/components/responses/Error" } } } },
+    "/auth/logout": { "post": { "operationId": "logout", "responses": { "200": { "description": "Local access state cleared by the client" } } } },
+    "/users/me": { "get": { "operationId": "currentUser", "responses": { "200": { "$ref": "#/components/responses/User" }, "401": { "$ref": "#/components/responses/Error" } } } },
+    "/users/me/skills": { "get": { "operationId": "userSkills", "responses": { "200": { "$ref": "#/components/responses/SkillProgress" }, "401": { "$ref": "#/components/responses/Error" } } } },
+    "/challenges": { "get": { "operationId": "listChallenges", "security": [], "responses": { "200": { "$ref": "#/components/responses/Challenges" } } } },
+    "/challenges/{id}": { "get": { "operationId": "challengeDetail", "security": [], "parameters": [{ "$ref": "#/components/parameters/ChallengeId" }], "responses": { "200": { "$ref": "#/components/responses/ChallengeDetail" }, "404": { "$ref": "#/components/responses/Error" } } } },
+    "/challenges/{id}/workspace": { "get": { "operationId": "workspace", "parameters": [{ "$ref": "#/components/parameters/ChallengeId" }], "responses": { "200": { "$ref": "#/components/responses/Workspace" }, "401": { "$ref": "#/components/responses/Error" }, "404": { "$ref": "#/components/responses/Error" } } } },
+    "/challenges/{id}/submit": { "post": { "operationId": "submitFlag", "parameters": [{ "$ref": "#/components/parameters/ChallengeId" }], "requestBody": { "$ref": "#/components/requestBodies/Flag" }, "responses": { "200": { "$ref": "#/components/responses/Submission" }, "400": { "$ref": "#/components/responses/Error" }, "401": { "$ref": "#/components/responses/Error" }, "404": { "$ref": "#/components/responses/Error" }, "429": { "$ref": "#/components/responses/Error" } } } },
+    "/challenges/{id}/hints/{hintId}/unlock": { "post": { "operationId": "unlockHint", "parameters": [{ "$ref": "#/components/parameters/ChallengeId" }, { "$ref": "#/components/parameters/HintId" }], "responses": { "200": { "description": "Unlocked hint content and new score" }, "400": { "$ref": "#/components/responses/Error" }, "401": { "$ref": "#/components/responses/Error" }, "404": { "$ref": "#/components/responses/Error" }, "409": { "$ref": "#/components/responses/Error" } } } },
+    "/labs/start": { "post": { "operationId": "startGuidedLab", "requestBody": { "$ref": "#/components/requestBodies/LabStart" }, "responses": { "200": { "$ref": "#/components/responses/LabSession" }, "400": { "$ref": "#/components/responses/Error" }, "401": { "$ref": "#/components/responses/Error" } } } },
+    "/labs/{id}/status": { "get": { "operationId": "labStatus", "parameters": [{ "$ref": "#/components/parameters/ChallengeId" }], "responses": { "200": { "$ref": "#/components/responses/LabStatus" }, "401": { "$ref": "#/components/responses/Error" } } } },
+    "/labs/{id}/refresh": { "post": { "operationId": "refreshGuidedLab", "parameters": [{ "$ref": "#/components/parameters/ChallengeId" }], "responses": { "200": { "$ref": "#/components/responses/LabStatus" }, "401": { "$ref": "#/components/responses/Error" }, "404": { "$ref": "#/components/responses/Error" } } } },
+    "/labs/{id}/stop": { "post": { "operationId": "stopGuidedLab", "parameters": [{ "$ref": "#/components/parameters/ChallengeId" }], "responses": { "200": { "$ref": "#/components/responses/LabStatus" }, "401": { "$ref": "#/components/responses/Error" }, "404": { "$ref": "#/components/responses/Error" } } } },
+    "/range/overview": { "get": { "operationId": "rangeOverview", "security": [], "responses": { "200": { "$ref": "#/components/responses/Range" } } } },
+    "/dashboard/stats": { "get": { "operationId": "dashboardStats", "security": [], "responses": { "200": { "$ref": "#/components/responses/DashboardStats" } } } },
+    "/dashboard/events": { "get": { "operationId": "dashboardEvents", "security": [], "responses": { "200": { "description": "Recent safe activity summaries" } } } },
+    "/leaderboard": { "get": { "operationId": "leaderboard", "security": [], "responses": { "200": { "$ref": "#/components/responses/Leaderboard" } } } },
+    "/skills": { "get": { "operationId": "skillGraph", "security": [], "responses": { "200": { "description": "Skill graph" } } } },
+    "/learning/overview": { "get": { "operationId": "learningOverview", "security": [], "responses": { "200": { "description": "Courses and optional user progress" } } } },
+    "/attack/scenario": { "get": { "operationId": "attackScenario", "security": [], "responses": { "200": { "description": "Isolated teaching scenario" } } } },
+    "/catalog/sources": { "get": { "operationId": "catalogSources", "security": [], "responses": { "200": { "description": "Approved catalog sources" } } } },
+    "/ai/chat": { "post": { "operationId": "askTutor", "requestBody": { "$ref": "#/components/requestBodies/AiChat" }, "responses": { "200": { "$ref": "#/components/responses/Ai" }, "400": { "$ref": "#/components/responses/Error" }, "401": { "$ref": "#/components/responses/Error" }, "429": { "$ref": "#/components/responses/Error" } } } }
+  },
+  "components": {
+    "securitySchemes": { "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" } },
+    "parameters": {
+      "ChallengeId": { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "maxLength": 100 } },
+      "HintId": { "name": "hintId", "in": "path", "required": true, "schema": { "type": "string", "maxLength": 100 } }
+    },
+    "requestBodies": {
+      "Login": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Login" } } } },
+      "Register": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Register" } } } },
+      "Flag": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/FlagSubmission" } } } },
+      "LabStart": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LabStart" } } } },
+      "AiChat": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AiChat" } } } }
+    },
+    "responses": {
+      "Auth": { "description": "Authenticated user and short-lived access token", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthResponse" } } } },
+      "User": { "description": "Current user", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } } },
+      "Challenges": { "description": "Published challenge summaries", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/ChallengeSummary" } } } } },
+      "ChallengeDetail": { "description": "Challenge metadata without flag material", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ChallengeDetail" } } } },
+      "Workspace": { "description": "Private workspace status", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Workspace" } } } },
+      "Submission": { "description": "Submission result without supplied flag", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Submission" } } } },
+      "LabSession": { "description": "Private guided-session state", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LabSession" } } } },
+      "LabStatus": { "description": "Private guided-session status", "content": { "application/json": { "schema": { "type": "object" } } } },
+      "Range": { "description": "Training range overview", "content": { "application/json": { "schema": { "type": "object" } } } },
+      "DashboardStats": { "description": "Dashboard aggregate counts", "content": { "application/json": { "schema": { "type": "object" } } } },
+      "Leaderboard": { "description": "Public ranking", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/LeaderboardEntry" } } } } },
+      "SkillProgress": { "description": "Private skill progress", "content": { "application/json": { "schema": { "type": "array" } } } },
+      "Ai": { "description": "Safety-filtered tutor response", "content": { "application/json": { "schema": { "type": "object", "required": ["content", "provider"], "properties": { "content": { "type": "string" }, "provider": { "type": "string" } } } } } },
+      "Error": { "description": "Standard API error", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ApiError" } } } }
+    },
+    "schemas": {
+      "Login": { "type": "object", "additionalProperties": false, "required": ["email", "password"], "properties": { "email": { "type": "string", "format": "email", "maxLength": 254 }, "password": { "type": "string", "minLength": 8, "maxLength": 128 } } },
+      "Register": { "type": "object", "additionalProperties": false, "required": ["username", "email", "password"], "properties": { "username": { "type": "string", "minLength": 2, "maxLength": 80 }, "email": { "type": "string", "format": "email", "maxLength": 254 }, "password": { "type": "string", "minLength": 8, "maxLength": 128 } } },
+      "FlagSubmission": { "type": "object", "additionalProperties": false, "required": ["flag"], "properties": { "flag": { "type": "string", "minLength": 1, "maxLength": 512, "writeOnly": true } } },
+      "LabStart": { "type": "object", "additionalProperties": false, "required": ["challengeId"], "properties": { "challengeId": { "type": "string", "minLength": 1, "maxLength": 100 } } },
+      "AiChat": { "type": "object", "additionalProperties": false, "required": ["message"], "properties": { "message": { "type": "string", "minLength": 1, "maxLength": 1000 }, "challengeId": { "type": "string", "maxLength": 100 }, "hintLevel": { "type": "integer", "minimum": 1, "maximum": 3 } } },
+      "User": { "type": "object", "required": ["id", "username", "email", "role", "score", "xp", "level"], "properties": { "id": { "type": "string" }, "username": { "type": "string" }, "email": { "type": "string", "format": "email" }, "role": { "enum": ["USER", "ADMIN"] }, "score": { "type": "integer" }, "xp": { "type": "integer" }, "level": { "type": "integer" } } },
+      "AuthResponse": { "type": "object", "required": ["user", "accessToken"], "properties": { "user": { "$ref": "#/components/schemas/User" }, "accessToken": { "type": "string", "writeOnly": true } } },
+      "ChallengeSummary": { "type": "object", "required": ["id", "slug", "title", "category", "difficulty", "points", "description", "solves", "solved", "available"], "properties": { "id": { "type": "string" }, "slug": { "type": "string" }, "title": { "type": "string" }, "category": { "enum": ["WEB", "CRYPTO", "NETWORK", "REVERSE", "PWN", "FORENSICS", "MISC"] }, "difficulty": { "enum": ["EASY", "MEDIUM", "HARD"] }, "points": { "type": "integer" }, "description": { "type": "string" }, "solves": { "type": "integer" }, "solved": { "type": "boolean" }, "available": { "type": "boolean" } } },
+      "ChallengeDetail": { "allOf": [{ "$ref": "#/components/schemas/ChallengeSummary" }, { "type": "object", "properties": { "hints": { "type": "array" }, "workspace": { "$ref": "#/components/schemas/Workspace" } } }] },
+      "Workspace": { "type": "object", "required": ["session", "recentSubmissions", "submissionStats", "resourceHealth"], "properties": { "session": { "$ref": "#/components/schemas/LabSession" }, "recentSubmissions": { "type": "array" }, "submissionStats": { "type": "object" }, "resourceHealth": { "type": "object" } } },
+      "LabSession": { "type": "object", "required": ["status", "running", "remainingSeconds"], "properties": { "instanceId": { "type": "string" }, "status": { "enum": ["STOPPED", "STARTING", "RUNNING", "EXPIRED", "FAILED"] }, "running": { "type": "boolean" }, "remainingSeconds": { "type": "integer", "minimum": 0 } } },
+      "Submission": { "type": "object", "required": ["success", "attempts"], "properties": { "success": { "type": "boolean" }, "alreadySolved": { "type": "boolean" }, "points": { "type": "integer" }, "newScore": { "type": "integer" }, "attempts": { "type": "array" } } },
+      "LeaderboardEntry": { "type": "object", "required": ["id", "rank", "username", "level", "score", "solved"], "properties": { "id": { "type": "string" }, "rank": { "type": "integer" }, "username": { "type": "string" }, "level": { "type": "integer" }, "score": { "type": "integer" }, "solved": { "type": "integer" } } },
+      "ApiError": { "type": "object", "required": ["statusCode", "code", "message", "timestamp", "path"], "properties": { "statusCode": { "type": "integer" }, "code": { "type": "string" }, "message": { "type": "string" }, "timestamp": { "type": "string", "format": "date-time" }, "path": { "type": "string" } } }
+    }
+  },
+  "x-realtime": {
+    "namespace": "/events",
+    "authentication": "Socket.IO handshake auth.token or Authorization: Bearer <JWT>",
+    "events": {
+      "session.ready": "Authentication acknowledgement without identity or token material.",
+      "challenge.solved": "Public aggregate-safe completion metadata without user identity or flag material.",
+      "leaderboard.updated": "Public invalidation signal; clients refresh the REST leaderboard.",
+      "lab.status": "Private event scoped to the authenticated user's room."
+    }
+  }
+}

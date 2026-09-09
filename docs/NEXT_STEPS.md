@@ -13,14 +13,16 @@
 - 共享响应 DTO、课程章节和课程进度已在 local / prisma 两个仓储之间对齐。
 - 第五阶段提交 `eb528c6` 已同步至 `origin/main`。
 - `/events` Socket.IO 网关已完成 JWT 握手校验、私有训练状态房间和脱敏公开事件；Redis fan-out 尚未接入。
+- OpenAPI 3.1、错误码契约和 `verify:local` 自动验收已完成；验收不依赖 Docker。
 - Docker 暂缓，不是当前阶段的前置条件。
 
-## 下一大阶段：API 文档与可重复验收
+## 下一大阶段：安全管理端能力
 
-1. 生成 OpenAPI 规范、请求/响应样例、错误码表和 WebSocket 事件契约。
-2. 将现有本地 API、DTO 拒绝和 Socket 握手检查纳入不依赖 Docker 的自动验收脚本。
-3. 之后配置 PostgreSQL，以 `DATA_BACKEND=prisma` 执行 `db:push`、`db:seed` 和端到端 API 测试；再建立正式 migration。
-4. 阶段验收后更新 `WORK_HANDOFF.md` 与本文件，提交并推送 `origin/main`。
+1. 新增管理员题目、课程、用户和运行态审计的受限 API；所有写操作必须要求 `ADMIN` 角色并记录活动。
+2. 复用 class-validator DTO，限制输入、避免明文 Flag 与哈希从管理读取接口泄漏。
+3. 前端新增独立管理视图，未授权用户不得加载管理数据或路由。
+4. 之后配置 PostgreSQL，以 `DATA_BACKEND=prisma` 执行 `db:push`、`db:seed` 和端到端 API 测试；再建立正式 migration。
+5. 阶段验收后更新 `WORK_HANDOFF.md` 与本文件，提交并推送 `origin/main`。
 
 ## 随后的阶段
 

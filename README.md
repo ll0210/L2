@@ -40,6 +40,8 @@ When PostgreSQL is available, set `DATA_BACKEND=prisma` in the server environmen
 
 Run `corepack pnpm build`. With the API running, `corepack pnpm verify:demo` checks demo login plus seeded challenges and skills. The local API also supports challenge workspaces, hint unlocks, server-side hash validation, score/skill updates, audit activities, time-limited guided sessions, and authenticated realtime notifications.
 
+`corepack pnpm verify:local` is the repeatable local acceptance check: it builds the workspace, temporarily starts an isolated server on port `3100`, verifies REST contracts, DTO rejection, learning data, Socket JWT handling, and private lab events, then stops the server. The API contract is in [`docs/openapi.json`](docs/openapi.json); errors and client behavior are documented in [`docs/ERROR_CODES.md`](docs/ERROR_CODES.md).
+
 ## API and realtime
 
 REST endpoints are prefixed with `/api`: auth, challenges, dashboard, skills, labs, AI, courses and leaderboard. The authenticated Socket.IO namespace is `/events`; it emits `session.ready`, `challenge.solved`, `leaderboard.updated`, and private `lab.status` events. Socket.IO never accepts learning mutations, and event payloads exclude flags, hashes, access tokens, and cross-user lab details. Redis-backed fan-out and Docker-backed labs remain deferred.
