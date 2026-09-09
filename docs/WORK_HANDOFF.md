@@ -1,6 +1,6 @@
 # CyberQuest 2.0 交接文档
 
-最后更新：2026-09-09（第四阶段：API 输入验证）
+最后更新：2026-09-09（第五阶段：共享响应契约与课程对齐）
 
 ## 当前目标
 
@@ -38,6 +38,14 @@
 - 全局 `ValidationPipe` 开启 `forbidNonWhitelisted`，多余字段会返回 400，降低批量赋值和未预期输入风险。
 - 控制器移除请求体与客户端 IP 的宽泛 `any`，将受控输入直接传给仓储接口。
 
+### 第五阶段：共享响应契约与课程对齐（本次完成，待推送）
+
+- `packages/shared` 新增认证、题目详情、提示、训练会话、提交结果、仪表盘、排行榜、能力、课程与攻击推演响应模型。
+- `LearningRepository` 改为以共享类型表达返回值；本地 JSON 与 Prisma 两个实现均经 TypeScript 约束。
+- 服务器和前端均声明对 `@cyberquest/shared` 的 workspace 依赖，锁文件已同步。
+- Prisma `Course` 模型新增 `challengeSlug` 与 `chapters`，种子为 3 条课程补齐章节和对应挑战；Prisma 返回同时映射 `difficulty` 到前端兼容的 `level`。
+- 本地学习概览补齐 `progress` 字段，保持 local 与 prisma 响应契约一致。
+
 ## 本次验证
 
 - `corepack pnpm --filter @cyberquest/server exec prisma validate`：通过（临时 PostgreSQL 连接串，仅校验模型，不连接数据库）。
@@ -48,6 +56,8 @@
 - `git diff --check`：通过。
 - 本地模式回归：健康检查、demo 登录、题目详情、技能读取均通过；题目响应确认不含 `flagHash`。
 - DTO 回归：有效登录与题目读取通过；登录请求混入 `role` 字段被正确拒绝为 HTTP 400。
+- 学习中心回归：demo 登录后返回 3 条课程；首条课程具有配套挑战、3 个章节与数值进度。
+- `corepack pnpm build`、`db:check`、`db:validate`、明文 Flag 扫描和 `git diff --check` 均通过。
 - 还没有可用 PostgreSQL，因此 Prisma 分支只完成编译/Schema/种子检查，尚未做真实数据库集成验证。
 
 ## GitHub 状态
@@ -57,6 +67,7 @@
 - 已推送的第一阶段基线：`a3cdd2d`、`087dc50`、`c3ca968`。
 - 第二阶段提交 `9c52a5b`（`feat: harden prisma seed and data model`）已推送到同一分支；运行态 JSON 与任何 `.env` 文件不得提交。
 - 第三阶段提交 `ab1cac6` 与第四阶段提交 `0d9ef3d` 已成功推送到 `origin/main`；此前 HTTPS 连接重置的问题已在重试后恢复。
+- 第五阶段会作为独立提交推送到同一分支。
 - 工作区发现 `workspace-preview.png` 的既有删除状态，本阶段不会恢复、删除或提交它。
 - 当前仓库专用提交身份：`Codex <codex@local>`，没有修改全局 Git 设置。
 
@@ -69,7 +80,7 @@
 
 ## 下一位执行者从这里开始
 
-1. 完成 API 响应 DTO 与 `LearningRepository` 返回类型收紧，消除仓储边界剩余的宽泛 `any`。
+1. 为 Socket.IO 建立鉴权网关与最小公开事件（解题、排行榜、训练状态）；Redis 适配器仍等待真实基础设施。
 2. 获得 PostgreSQL 环境后，执行 `db:push` / `db:seed`，并对 Prisma 分支做认证、解题并发、提示、会话与排行榜集成测试；再生成正式 migration。
-3. 再实施 Socket.IO/Redis 的实时事件层。
+3. 继续把仓储内部的 `Record<string, any>` 限缩到领域 DTO，优先处理本地 JSON 实现。
 4. 用户确认 Docker 条件后，再运行 PostgreSQL/Redis、生成迁移并验证 compose；不要提前宣称容器化可用。

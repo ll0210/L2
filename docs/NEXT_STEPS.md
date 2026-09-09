@@ -10,13 +10,14 @@
 - `DATA_BACKEND=local|prisma` 已可切换仓储实现；Prisma 分支尚待真实 PostgreSQL 集成验证。
 - 输入 DTO、白名单与未知字段拒绝已覆盖认证、Flag、训练会话和 AI 请求。
 - 第三、四阶段提交 `ab1cac6`、`0d9ef3d` 已同步至 `origin/main`。
+- 共享响应 DTO、课程章节和课程进度已在 local / prisma 两个仓储之间对齐。
 - Docker 暂缓，不是当前阶段的前置条件。
 
-## 下一大阶段：API 响应 DTO 与仓储类型收紧
+## 下一大阶段：安全的 Socket.IO 实时事件
 
-1. 在 `packages/shared` 定义认证、题目、错误、训练会话、排行榜和 AI 响应 DTO。
-2. 为 `LearningRepository` 标注 Promise/返回类型，让 Local 与 Prisma 实现受编译器约束。
-3. 复跑本地 API 契约回归，确认前端依旧可消费响应。
+1. 新增 Socket.IO gateway，验证握手 JWT，仅允许安全的教学事件订阅。
+2. 解题、排行榜和训练状态只推送脱敏事件；不得通过 Socket 泄漏 Flag、哈希或跨用户私有数据。
+3. 前端以可选方式消费事件，连接失败必须平稳降级到 REST。
 4. 之后配置 PostgreSQL，以 `DATA_BACKEND=prisma` 执行 `db:push`、`db:seed` 和端到端 API 测试；再建立正式 migration。
 5. 阶段验收后更新 `WORK_HANDOFF.md` 与本文件，提交并推送 `origin/main`。
 

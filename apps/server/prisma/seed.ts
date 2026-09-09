@@ -102,15 +102,15 @@ async function main() {
     });
   }
 
-  for (const [title, slug, description, difficulty, duration, category] of [
-    ['Web Security Foundations', 'web-security-foundations', 'HTTP, cookies and browser trust boundaries.', 'BEGINNER', '3h', 'Web'],
-    ['Network Defense Basics', 'network-defense-basics', 'Learn traffic analysis and segmentation.', 'BEGINNER', '2h', 'Network'],
-    ['CTF Methodology', 'ctf-methodology', 'A repeatable, ethical problem-solving workflow.', 'INTERMEDIATE', '4h', 'Pentest'],
+  for (const [title, slug, description, difficulty, duration, category, challengeSlug, chapters] of [
+    ['Web Security Foundations', 'web-security-foundations', 'HTTP, cookies and browser trust boundaries.', 'BEGINNER', '3h', 'Web', 'web-101', ['Trace an HTTP request', 'Understand session boundaries', 'Validate untrusted input']],
+    ['Network Defense Basics', 'network-defense-basics', 'Learn traffic analysis and segmentation.', 'BEGINNER', '2h', 'Network', 'network-101', ['Read a connection', 'Recognise anomalous patterns', 'Apply minimum defensive controls']],
+    ['CTF Methodology', 'ctf-methodology', 'A repeatable, ethical problem-solving workflow.', 'INTERMEDIATE', '4h', 'Pentest', 'crypto-101', ['Read task boundaries', 'Form a testable hypothesis', 'Write a concise retrospective']],
   ] as const) {
     await prisma.course.upsert({
       where: { slug },
-      update: { title, description, difficulty, duration, category },
-      create: { title, slug, description, difficulty, duration, category },
+      update: { title, description, difficulty, duration, category, challengeSlug, chapters: [...chapters] },
+      create: { title, slug, description, difficulty, duration, category, challengeSlug, chapters: [...chapters] },
     });
   }
 

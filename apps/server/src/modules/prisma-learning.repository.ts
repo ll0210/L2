@@ -4,6 +4,7 @@ import * as argon2 from 'argon2';
 import { createHmac } from 'node:crypto';
 import { LearningRecord, LearningRepository } from './learning.repository';
 import { PrismaService } from './prisma.service';
+import type { ChallengeDetail, LabSession, RangeOverview, WorkspaceOverview } from '@cyberquest/shared';
 
 const jwt = require('jsonwebtoken') as {
   sign: (payload: object, secret: string, options: { expiresIn: string }) => string;
@@ -131,7 +132,7 @@ export class PrismaLearningRepository implements LearningRepository, OnModuleIni
     return attempts.map((attempt) => ({ id: attempt.id, correct: attempt.correct, createdAt: attempt.createdAt.toISOString() }));
   }
 
-  private async sessionFor(userId: string | undefined, challengeId: string) {
+  private async sessionFor(userId: string | undefined, challengeId: string): Promise<LabSession> {
     if (!userId) return { status: 'STOPPED', running: false, requiresLogin: true, remainingSeconds: 0 };
     await this.prisma.labInstance.updateMany({
       where: { userId, status: 'RUNNING', expiresAt: { lte: new Date() } },
@@ -153,7 +154,7 @@ export class PrismaLearningRepository implements LearningRepository, OnModuleIni
     };
   }
 
-  private async workspaceFor(challengeId: string, userId: string) {
+  private async workspaceFor(challengeId: string, userId: string): Promise<WorkspaceOverview> {
     const [session, attempts, next] = await Promise.all([
       this.sessionFor(userId, challengeId),
       this.recentAttempts(userId, challengeId),
@@ -205,7 +206,7 @@ export class PrismaLearningRepository implements LearningRepository, OnModuleIni
     return challenges.map((challenge) => this.challengeSummary(challenge, solved));
   }
 
-  async challengeDetail(slug: string, user?: LearningRecord) {
+  async challengeDetail(slug: string, user?: LearningRecord): Promise<ChallengeDetail> {
     const [challenge, solved] = await Promise.all([
       this.challengeBySlug(slug, { _count: { select: { solves: true } }, hints: { orderBy: { order: 'asc' } } }),
       this.solvedIds(user),
@@ -228,10 +229,10 @@ export class PrismaLearningRepository implements LearningRepository, OnModuleIni
       workspace: workspace ?? { session: await this.sessionFor(undefined, challenge.id), recentSubmissions: [], submissionStats, resourceHealth: { status: 'READY' } },
       attempts,
       submissionStats,
-    };
+    } as ChallengeDetail;
   }
 
-  async workspace(slug: string, user: LearningRecord) {
+  async workspace(slug: string, user: LearningRecord): Promise<WorkspaceOverview> {
     const challenge = await this.challengeBySlug(slug);
     await this.databaseUser(user.id);
     return this.workspaceFor(challenge.id, user.id);
@@ -300,7 +301,7 @@ export class PrismaLearningRepository implements LearningRepository, OnModuleIni
     return { content: hint.content, cost: hint.cost, newScore: result.score };
   }
 
-  async startLab(user: LearningRecord, challengeId: string) {
+  async startLab(user: LearningRecord, challengeId: string): Promise<LabSession & { message?: string }> {
     const [challenge, databaseUser] = await Promise.all([this.challengeBySlug(challengeId), this.databaseUser(user.id)]);
     const existing = await this.sessionFor(databaseUser.id, challenge.id);
     if (existing.running) return { ...existing, message: 'A guided learning session is already running for this challenge.' };
@@ -311,12 +312,12 @@ export class PrismaLearningRepository implements LearningRepository, OnModuleIni
     return { instanceId: lab.id, status: lab.status, accessMode: 'LOCAL_GUIDED', startedAt: lab.startedAt?.toISOString(), expiresAt: lab.expiresAt.toISOString(), remainingSeconds: ttl, running: true };
   }
 
-  async labStatus(slug: string, user: LearningRecord) {
+  async labStatus(slug: string, user: LearningRecord): Promise<{ session: LabSession; resourceHealth: { status: 'READY' } }> {
     const challenge = await this.challengeBySlug(slug);
     return { session: await this.sessionFor(user.id, challenge.id), resourceHealth: { status: 'READY' } };
   }
 
-  async refreshLab(slug: string, user: LearningRecord) {
+  async refreshLab(slug: string, user: LearningRecord): Promise<{ session: LabSession }> {
     const challenge = await this.challengeBySlug(slug);
     const lab = await this.prisma.labInstance.findFirst({ where: { userId: user.id, challengeId: challenge.id, status: 'RUNNING', expiresAt: { gt: new Date() } }, orderBy: { startedAt: 'desc' } });
     if (!lab) this.fail(404, 'LAB_NOT_RUNNING', 'No guided session is running for this challenge.');
@@ -328,7 +329,7 @@ export class PrismaLearningRepository implements LearningRepository, OnModuleIni
     return { session: await this.sessionFor(user.id, challenge.id) };
   }
 
-  async stopLab(slug: string, user: LearningRecord) {
+  async stopLab(slug: string, user: LearningRecord): Promise<{ session: LabSession; message: string }> {
     const challenge = await this.challengeBySlug(slug);
     const lab = await this.prisma.labInstance.findFirst({ where: { userId: user.id, challengeId: challenge.id, status: 'RUNNING', expiresAt: { gt: new Date() } }, orderBy: { startedAt: 'desc' } });
     if (!lab) this.fail(404, 'LAB_NOT_RUNNING', 'No guided session is running for this challenge.');
@@ -339,7 +340,7 @@ export class PrismaLearningRepository implements LearningRepository, OnModuleIni
     return { session: await this.sessionFor(user.id, challenge.id), message: 'Guided learning session stopped.' };
   }
 
-  async rangeOverview(user?: LearningRecord) {
+  async rangeOverview(user?: LearningRecord): Promise<RangeOverview> {
     const [availableTasks, solved, sessions] = await Promise.all([
       this.prisma.challenge.count({ where: { isActive: true } }),
       this.solvedIds(user),
@@ -348,7 +349,7 @@ export class PrismaLearningRepository implements LearningRepository, OnModuleIni
     const tasks = await this.listChallenges(user);
     return {
       metrics: { availableTasks, activeSessions: sessions.length, completed: solved.size, attachments: 0 },
-      sessions: sessions.map((lab) => ({ instanceId: lab.id, status: lab.status, slug: lab.challenge.slug, title: lab.challenge.title, category: lab.challenge.category, expiresAt: lab.expiresAt.toISOString(), expiresInMinutes: Math.max(0, Math.ceil((lab.expiresAt.getTime() - Date.now()) / 60_000)) })),
+      sessions: sessions.map((lab) => ({ instanceId: lab.id, status: lab.status, running: true, remainingSeconds: Math.max(0, Math.ceil((lab.expiresAt.getTime() - Date.now()) / 1000)), slug: lab.challenge.slug, title: lab.challenge.title, category: lab.challenge.category, expiresAt: lab.expiresAt.toISOString(), expiresInMinutes: Math.max(0, Math.ceil((lab.expiresAt.getTime() - Date.now()) / 60_000)) })),
       tasks: tasks.filter((task) => !task.solved),
     };
   }
@@ -401,7 +402,19 @@ export class PrismaLearningRepository implements LearningRepository, OnModuleIni
     const skillXp = user ? (await this.prisma.userSkill.aggregate({ where: { userId: user.id }, _sum: { xp: true } }))._sum.xp ?? 0 : 0;
     return {
       summary: { courseCount: courses.length, finished: progress.filter((item) => item.completedAt !== null).length, skillXp },
-      courses: courses.map((course) => ({ ...course, progress: progressByCourse.get(course.id)?.progress ?? 0, completed: Boolean(progressByCourse.get(course.id)?.completedAt) })),
+      courses: courses.map((course) => ({
+        id: course.id,
+        title: course.title,
+        slug: course.slug,
+        description: course.description,
+        level: course.difficulty,
+        duration: course.duration,
+        category: course.category,
+        chapters: Array.isArray(course.chapters) ? course.chapters.filter((chapter): chapter is string => typeof chapter === 'string') : [],
+        challengeSlug: course.challengeSlug ?? '',
+        progress: progressByCourse.get(course.id)?.progress ?? 0,
+        completed: Boolean(progressByCourse.get(course.id)?.completedAt),
+      })),
     };
   }
 

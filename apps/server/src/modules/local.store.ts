@@ -4,6 +4,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { copyFileSync, existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { LearningRepository } from './learning.repository';
+import type { ChallengeDetail, LabSession, SkillProgress, WorkspaceOverview } from '@cyberquest/shared';
 const jwt = require('jsonwebtoken') as { sign: (payload: object, secret: string, options: { expiresIn: string }) => string; verify: (token: string, secret: string) => unknown };
 
 type RecordData = Record<string, any>;
@@ -142,10 +143,10 @@ export class LocalStoreService implements LearningRepository {
   }
 
   listChallenges(user?: RecordData) { return this.data.challenges.map((challenge: RecordData) => this.challengeView(challenge, user)); }
-  challengeDetail(slug: string, user?: RecordData) { return this.challengeView(this.challengeBySlug(slug), user, true); }
-  workspace(slug: string, user: RecordData) {
+  challengeDetail(slug: string, user?: RecordData): ChallengeDetail { return this.challengeView(this.challengeBySlug(slug), user, true) as ChallengeDetail; }
+  workspace(slug: string, user: RecordData): WorkspaceOverview {
     const challenge = this.challengeBySlug(slug); const attempts = this.recentAttempts(user, challenge);
-    return { session: this.sessionFor(user, challenge), recentSubmissions: attempts, submissionStats: { total: attempts.length, correct: attempts.filter((item: RecordData) => item.correct).length }, resourceHealth: { status: 'READY' }, nextChallenge: this.nextChallenge(user, challenge) };
+    return { session: this.sessionFor(user, challenge), recentSubmissions: attempts, submissionStats: { total: attempts.length, correct: attempts.filter((item: RecordData) => item.correct).length }, resourceHealth: { status: 'READY' }, nextChallenge: this.nextChallenge(user, challenge) } as WorkspaceOverview;
   }
   private nextChallenge(user: RecordData | undefined, current: RecordData) {
     if (!user) return undefined;
@@ -183,7 +184,7 @@ export class LocalStoreService implements LearningRepository {
     this.data.labs.push(lab); this.activity(user, 'LAB_START', `启动「${challenge.title}」本地受控会话`); this.persist(); return { ...lab, running: true };
   }
 
-  labStatus(slug: string, user: RecordData) { return { session: this.sessionFor(user, this.challengeBySlug(slug)), resourceHealth: { status: 'READY' } }; }
+  labStatus(slug: string, user: RecordData): { session: LabSession; resourceHealth: { status: 'READY' } } { return { session: this.sessionFor(user, this.challengeBySlug(slug)), resourceHealth: { status: 'READY' } } as { session: LabSession; resourceHealth: { status: 'READY' } }; }
   refreshLab(slug: string, user: RecordData) {
     const challenge = this.challengeBySlug(slug); const lab = [...this.data.labs].reverse().find((item: RecordData) => item.userId === user.id && item.challengeId === challenge.id && item.status === 'RUNNING');
     if (!lab) this.fail(404, 'LAB_NOT_RUNNING', '当前题目没有运行中的受控会话。');
@@ -207,8 +208,14 @@ export class LocalStoreService implements LearningRepository {
   leaderboard() { return [...this.data.users].sort((a: RecordData, b: RecordData) => (b.score ?? 0) - (a.score ?? 0)).map((user: RecordData, index: number) => ({ id: user.id, rank: index + 1, username: user.username, level: user.level ?? 1, score: user.score ?? 0, solved: user.solved?.length ?? 0 })); }
   skillGraph() { return { nodes: SKILLS.map(([slug, name, category, description], index) => ({ slug, name, category, description, x: index % 3, y: Math.floor(index / 3) })), edges: [] }; }
   private skillLevel(xp: number) { return Math.max(1, Math.floor(xp / 100) + 1); }
-  userSkills(user: RecordData) { return SKILLS.map(([slug, name, category, description]) => { const xp = user.skills?.[slug] ?? 0; return { skill: { slug, name, category, description }, xp, level: this.skillLevel(xp), status: xp > 0 ? 'LEARNING' : 'AVAILABLE' }; }); }
-  learningOverview(user?: RecordData) { return { summary: { courseCount: this.data.courses.length, finished: user?.solved?.length ?? 0, skillXp: Object.values(user?.skills ?? {}).reduce((total: number, xp: any) => total + Number(xp), 0) }, courses: this.data.courses.map((course: RecordData) => ({ ...course, completed: Boolean(user?.solved?.some((id: string) => this.challengeById(id)?.slug === course.challengeSlug)) })) }; }
+  userSkills(user: RecordData): SkillProgress[] { return SKILLS.map(([slug, name, category, description]) => { const xp = user.skills?.[slug] ?? 0; return { skill: { slug, name, category, description }, xp, level: this.skillLevel(xp), status: xp > 0 ? 'LEARNING' : 'AVAILABLE' }; }) as SkillProgress[]; }
+  learningOverview(user?: RecordData) {
+    const courses = this.data.courses.map((course: RecordData) => {
+      const completed = Boolean(user?.solved?.some((id: string) => this.challengeById(id)?.slug === course.challengeSlug));
+      return { ...course, progress: completed ? 100 : 0, completed };
+    });
+    return { summary: { courseCount: courses.length, finished: courses.filter((course: RecordData) => course.completed).length, skillXp: Object.values(user?.skills ?? {}).reduce((total: number, xp: any) => total + Number(xp), 0) }, courses };
+  }
   attackScenario() { return { description: '这是不连接任何外部目标的教学推演，用于理解告警、调查和防护控制之间的关系。', phases: [['01', '00:02', '外部侦察告警', 'T1595', '识别到异常探测节奏，先记录证据而不是执行攻击。'], ['02', '00:12', 'Web 服务指纹', 'T1592', '把公开服务信息纳入风险评估。'], ['03', '00:25', '初始访问模拟', 'T1190', '教学情景中模拟 Web 服务高风险告警。'], ['04', '00:46', '权限边界检查', 'T1068', '验证最小权限和补丁策略是否有效。'], ['05', '01:10', '横向移动阻断', 'T1021', '分段和访问控制阻止横向扩散。'], ['06', '01:55', '外传防护闭环', 'T1041', '记录处置结果并形成改进项。']].map(([id, time, title, mitre, detail]) => ({ id, time, title, mitre, detail })), controls: [{ name: '网络分段', status: '已启用', description: '限制非必要路径。' }, { name: '最小权限', status: '已启用', description: '降低账户滥用影响。' }, { name: '审计记录', status: '已启用', description: '保留可复核证据。' }] }; }
   aiChat(user: RecordData, message: string, challengeId?: string, hintLevel = 1) { const challenge = challengeId ? this.challengeBySlug(challengeId) : undefined; this.activity(user, 'AI_TUTOR', '使用本地学习助手'); this.persist(); const advice = hintLevel >= 3 ? '把任务拆为输入、处理、输出，逐项列出能验证的证据；优先解释现象和工具输出，不要猜测最终答案。' : '先说明你看到了什么，再提出一个最小可验证假设；只在题目提供的材料或受控会话中验证。'; return { content: `${challenge ? `当前题目「${challenge.title}」` : '当前学习目标'}：${advice} 你提出的问题是“${message.slice(0, 240)}”。本助手不会提供 Flag、任意命令或外部攻击步骤。`, provider: 'mock-local' }; }
   catalogSources() { return []; }

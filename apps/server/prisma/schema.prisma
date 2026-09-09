@@ -203,6 +203,8 @@ model Course {
   difficulty String
   duration String
   category String
+  challengeSlug String?
+  chapters Json?
   isPublished Boolean @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
