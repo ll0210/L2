@@ -8,14 +8,15 @@
 - Prisma Schema 已可校验和生成客户端；生产种子不含明文 Flag。
 - 第二阶段安全数据模型提交 `9c52a5b` 已推送至 `origin/main`。
 - `DATA_BACKEND=local|prisma` 已可切换仓储实现；Prisma 分支尚待真实 PostgreSQL 集成验证。
+- 输入 DTO、白名单与未知字段拒绝已覆盖认证、Flag、训练会话和 AI 请求。
 - Docker 暂缓，不是当前阶段的前置条件。
 
-## 下一大阶段：Prisma 数据库集成验收
+## 下一大阶段：API 响应 DTO 与仓储类型收紧
 
-1. 配置可用 PostgreSQL 后，以 `DATA_BACKEND=prisma` 执行 `db:push`、`db:seed` 和端到端 API 测试。
-2. 验证并发重复提交不会重复计分，提示扣分与训练会话状态按事务保持一致。
-3. 建立正式 Prisma migration，并通过空库和升级库演练验证迁移。
-4. 将控制器和前端 API 返回模型转换为 `packages/shared` 内的 DTO；移除接口层宽泛 `any`。
+1. 在 `packages/shared` 定义认证、题目、错误、训练会话、排行榜和 AI 响应 DTO。
+2. 为 `LearningRepository` 标注 Promise/返回类型，让 Local 与 Prisma 实现受编译器约束。
+3. 复跑本地 API 契约回归，确认前端依旧可消费响应。
+4. 之后配置 PostgreSQL，以 `DATA_BACKEND=prisma` 执行 `db:push`、`db:seed` 和端到端 API 测试；再建立正式 migration。
 5. 阶段验收后更新 `WORK_HANDOFF.md` 与本文件，提交并推送 `origin/main`。
 
 ## 随后的阶段
