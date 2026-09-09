@@ -46,12 +46,17 @@ model User {
   level Int @default(1)
   createdAt DateTime @default(now())
   lastLoginAt DateTime?
+  lastActiveAt DateTime?
   solves ChallengeSolve[]
   attempts ChallengeAttempt[]
   skills UserSkill[]
+  unlockedHints UserHint[]
   labs LabInstance[]
   activities Activity[]
   notifications Notification[]
+  sessions Session[]
+  courseProgress CourseProgress[]
+  achievements UserAchievement[]
   @@index([role])
   @@index([score])
 }
@@ -66,6 +71,7 @@ model Challenge {
   flagHash String
   author String @default("CyberQuest Team")
   isActive Boolean @default(true)
+  isDynamic Boolean @default(false)
   createdAt DateTime @default(now())
   solves ChallengeSolve[]
   attempts ChallengeAttempt[]
@@ -115,9 +121,9 @@ model UserHint {
   userId String
   hintId String
   unlockedAt DateTime @default(now())
+  user User @relation(fields:[userId],references:[id])
   hint ChallengeHint @relation(fields:[hintId],references:[id])
   @@id([userId,hintId])
-  @@unique([userId,hintId])
 }
 model Skill {
   id String @id @default(cuid())
@@ -198,5 +204,49 @@ model Course {
   duration String
   category String
   isPublished Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  progress CourseProgress[]
   @@index([category])
+}
+model Session {
+  id String @id @default(cuid())
+  userId String
+  tokenHash String @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@index([userId,expiresAt])
+  @@index([expiresAt])
+}
+model Achievement {
+  id String @id @default(cuid())
+  slug String @unique
+  name String
+  description String
+  icon String?
+  condition Json
+  createdAt DateTime @default(now())
+  users UserAchievement[]
+}
+model UserAchievement {
+  userId String
+  achievementId String
+  unlockedAt DateTime @default(now())
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  achievement Achievement @relation(fields:[achievementId],references:[id],onDelete:Cascade)
+  @@id([userId,achievementId])
+  @@index([achievementId,unlockedAt])
+}
+model CourseProgress {
+  userId String
+  courseId String
+  progress Int @default(0)
+  completedAt DateTime?
+  updatedAt DateTime @updatedAt
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  course Course @relation(fields:[courseId],references:[id],onDelete:Cascade)
+  @@id([userId,courseId])
+  @@index([courseId,progress])
 }

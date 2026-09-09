@@ -5,6 +5,7 @@
     "dev": "corepack pnpm exec nest start --watch",
     "build": "corepack pnpm exec nest build",
     "start": "node dist/main",
+    "prisma:validate": "corepack pnpm exec prisma validate",
     "prisma:generate": "corepack pnpm exec prisma generate",
     "prisma:push": "corepack pnpm exec prisma db push",
     "prisma:seed": "corepack pnpm exec tsx prisma/seed.ts"

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "corepack pnpm --parallel --filter @cyberquest/server --filter @cyberquest/web dev",
     "build": "corepack pnpm --filter @cyberquest/shared build && corepack pnpm --filter @cyberquest/server build && corepack pnpm --filter @cyberquest/web build",
+    "db:validate": "corepack pnpm --filter @cyberquest/server prisma:validate",
     "db:generate": "corepack pnpm --filter @cyberquest/server prisma:generate",
     "db:push": "corepack pnpm --filter @cyberquest/server prisma:push",
     "db:seed": "corepack pnpm --filter @cyberquest/server prisma:seed",

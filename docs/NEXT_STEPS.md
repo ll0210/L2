@@ -1,31 +1,31 @@
-# CyberQuest 2.0 下一步执行清单
+# CyberQuest 2.0 后续执行清单
 
 最后更新：2026-09-09
 
-## 已完成阶段：恢复本地可运行闭环
+## 当前完成点
 
-1. 已补齐 `src/stores/auth.ts`，统一 Token、当前用户、登录、注册与退出状态。
-2. 已补齐 NestJS 本地存储服务、控制器、健康检查与统一错误格式。
-3. 已实现前端当前调用的 API：认证、挑战、工作台、提示、受控会话、AI、仪表盘、排行榜、技能、学习、攻击推演和题源。
-4. 已确保 Flag 只在服务端做哈希比较；终端只支持固定教学命令。
-5. 已完成依赖安装、类型检查、生产构建和本地 API 验收。
+- 本地 JSON 教学闭环可运行并已完成 GitHub 初始交付。
+- Prisma Schema 已可校验和生成客户端；生产种子不含明文 Flag。
+- Docker 暂缓，不是当前阶段的前置条件。
 
-## 下一个大阶段：版本控制与数据层准备
+## 下一大阶段：可切换的 Prisma 持久化层
 
-1. 已收到 GitHub 仓库地址，已初始化 Git、配置 `origin` 和 `main` 分支；首个提交 `a3cdd2d` 已推送并建立追踪关系。
-2. 已将本地 JSON 种子数据与运行时用户数据分离；运行时数据已加入忽略规则，避免把学习记录或账号哈希提交到 GitHub。
-3. 已建立 Repository 接口，让 Local JSON 与 Prisma 实现可以并存和切换。
+1. 新增 `PrismaService` 和 `PrismaLearningRepository`，实现与 `LearningRepository` 对应的读取与写入能力。
+2. 以 `DATA_BACKEND=local|prisma` 作为显式选择，默认仍是 `local`，避免没有 PostgreSQL 时破坏现有演示。
+3. 按安全边界实现：Argon2id Flag 校验、刷新会话哈希、请求限流、审计活动、挑战解题事务、积分与技能更新。
+4. 将控制器和前端 API 返回模型转换为 `packages/shared` 内的 DTO；移除接口层宽泛 `any`。
+5. 编写不依赖 Docker 的单元测试与契约测试；有 PostgreSQL 后再补充集成测试、迁移和种子导入。
+6. 阶段验收后更新 `WORK_HANDOFF.md` 与本文件，提交并推送 `origin/main`。
 
-## GitHub 推送后立即执行
+## 随后的阶段
 
-1. 已将本轮初始交接同步提交推送至 `origin/main`；在每个后续阶段推送后，验证远程 `main` 分支与工作区均干净并记录最新提交哈希。
-2. 为 Prisma 持久层建立独立迁移计划：模型差异、种子导入策略、数据访问层和环境变量切换。
-3. 将接口返回类型从当前 Repository 端口中的过渡 `any` 收紧为共享 DTO。
+1. 实时层：Socket.IO 事件（解题、排行榜、训练状态、通知）与 Redis 缓存/排行榜适配器。
+2. AI 层：Provider 接口、Mock/OpenAI 配置、提示等级与敏感答案过滤、限流审计。
+3. Docker 阶段（用户确认时执行）：私有网络、非 root 容器、资源限制、只读文件系统、TTL 清理、PostgreSQL/Redis、迁移与端到端验证。
+4. 质量与交付：E2E、错误码文档、OpenAPI、可观测性、CI 与部署说明。
 
-## 后续大阶段
+## 每次回复的固定收尾
 
-1. 将本地 JSON 存储抽象为可替换 Repository，接入 Prisma/PostgreSQL 与 Redis。
-2. 接入 Socket.IO 的解题、排行榜、Lab 状态和通知事件。
-3. 实现 Docker 私有网络靶场生命周期与安全限制。
-4. 完善 AI Provider 抽象、OpenAI 配置与安全提示等级。
-5. 完成 Docker Compose、测试、README、GitHub 分阶段提交。
+1. 更新 `docs/WORK_HANDOFF.md`，记录已完成内容、验证结果、风险与下一入口。
+2. 更新本文件，写明接下来可执行的步骤。
+3. 每完成一个可验收大阶段，先验证，再提交并推送到 `https://github.com/ll0210/L2.git` 的 `main` 分支。

@@ -1,8 +1,14 @@
-# 本地数据说明
+# Local data boundary
 
-`cyberquest.seed.json` 是可提交、可复现的初始教学数据。它只包含演示账号、题目元数据、服务端 Flag 哈希和课程定义。
+`cyberquest.seed.json` is the versioned, reproducible data used by the local
+learning demonstration. It may contain only demo identities, challenge
+metadata, server-side flag hashes, and course definitions.
 
-`cyberquest.local.json` 是运行时副本，保存注册用户、提交、积分、提示解锁、会话与审计活动。它必须保持在版本控制之外；删除该文件后，服务端会在下一次启动时从种子重新生成一个干净的副本。
+`cyberquest.local.json` is a runtime copy. It contains locally created users,
+attempts, scores, unlocked hints, sessions, and audit activity. It is ignored
+by Git; deleting it makes the server recreate a clean copy at its next start.
 
-不要把明文 Flag、明文密码、Token 或真实用户数据写入这两个文件。
-
+The local compatibility store currently uses SHA-256 hashes because it must
+read the existing demo data. The PostgreSQL seed in `../prisma/seed.ts` uses
+Argon2id verification hashes only. Neither file may contain plaintext flags,
+plaintext passwords, tokens, or real user data.

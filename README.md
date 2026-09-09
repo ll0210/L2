@@ -19,6 +19,12 @@ The server reads and updates `apps/server/data/cyberquest.local.json`. It is loc
 
 Docker Compose is retained as a production-architecture scaffold and will be verified after the JSON-to-Prisma repository migration.
 
+## Prisma preparation (Docker can wait)
+
+The production schema is ready to be checked without starting Docker. Copy `apps/server/.env.example` to `apps/server/.env`, then run `corepack pnpm db:validate` and `corepack pnpm db:generate`. `db:push` and `db:seed` require a reachable PostgreSQL instance and are deliberately deferred to the Docker/production stage.
+
+The Prisma seed contains only Argon2id flag-verification hashes. It is not an authoring source for plaintext flags, and no challenge endpoint exposes either plaintext flags or their hashes.
+
 ## Demo identities
 
 | User | Email | Password | Role |
