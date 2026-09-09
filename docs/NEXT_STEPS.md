@@ -11,6 +11,7 @@
 - 输入 DTO、白名单与未知字段拒绝已覆盖认证、Flag、训练会话和 AI 请求。
 - 第三、四阶段提交 `ab1cac6`、`0d9ef3d` 已同步至 `origin/main`。
 - 共享响应 DTO、课程章节和课程进度已在 local / prisma 两个仓储之间对齐。
+- 第五阶段提交 `eb528c6` 已同步至 `origin/main`。
 - Docker 暂缓，不是当前阶段的前置条件。
 
 ## 下一大阶段：安全的 Socket.IO 实时事件
