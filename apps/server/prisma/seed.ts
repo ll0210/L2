@@ -41,6 +41,16 @@ const skills = [
   ['recon', 'Reconnaissance', 'Pentest'],
 ] as const;
 
+const categoryHints: Record<string, readonly [string, string]> = {
+  WEB: ['Trace the trust boundary', 'Follow one input from the request through validation and storage.'],
+  CRYPTO: ['Name the representation', 'Identify each encoding or cryptographic primitive before transforming data.'],
+  FORENSICS: ['Preserve the evidence', 'Start with metadata and timestamps before drawing conclusions.'],
+  NETWORK: ['Read the conversation', 'Compare protocol fields and timing; do not infer intent from one packet alone.'],
+  REVERSE: ['Start with observable strings', 'Map readable strings to the surrounding control flow in the supplied sample.'],
+  PWN: ['Check every boundary', 'Write down buffer sizes, input lengths, and the validation performed at each boundary.'],
+  MISC: ['Verify the source', 'Separate facts, assumptions, and claims that still need evidence.'],
+};
+
 function skillCategoryFor(category: Category) {
   return category === 'MISC' ? 'PENTEST' : category;
 }
@@ -83,6 +93,12 @@ async function main() {
       where: { challengeId_skillId: { challengeId: challenge.id, skillId: skill.id } },
       update: { xpReward: Math.round(challenge.points * 0.8) },
       create: { challengeId: challenge.id, skillId: skill.id, xpReward: Math.round(challenge.points * 0.8) },
+    });
+    const [title, content] = categoryHints[challenge.category];
+    await prisma.challengeHint.upsert({
+      where: { challengeId_order: { challengeId: challenge.id, order: 1 } },
+      update: { title, content, cost: 20 },
+      create: { challengeId: challenge.id, title, content, cost: 20, order: 1 },
     });
   }
 

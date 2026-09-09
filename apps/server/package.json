@@ -6,6 +6,7 @@
     "build": "corepack pnpm exec nest build",
     "start": "node dist/main",
     "prisma:validate": "corepack pnpm exec prisma validate",
+    "prisma:check": "corepack pnpm exec tsc -p tsconfig.prisma.json --noEmit",
     "prisma:generate": "corepack pnpm exec prisma generate",
     "prisma:push": "corepack pnpm exec prisma db push",
     "prisma:seed": "corepack pnpm exec tsx prisma/seed.ts"

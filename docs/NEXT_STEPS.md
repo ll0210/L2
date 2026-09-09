@@ -7,16 +7,16 @@
 - 本地 JSON 教学闭环可运行并已完成 GitHub 初始交付。
 - Prisma Schema 已可校验和生成客户端；生产种子不含明文 Flag。
 - 第二阶段安全数据模型提交 `9c52a5b` 已推送至 `origin/main`。
+- `DATA_BACKEND=local|prisma` 已可切换仓储实现；Prisma 分支尚待真实 PostgreSQL 集成验证。
 - Docker 暂缓，不是当前阶段的前置条件。
 
-## 下一大阶段：可切换的 Prisma 持久化层
+## 下一大阶段：Prisma 数据库集成验收
 
-1. 新增 `PrismaService` 和 `PrismaLearningRepository`，实现与 `LearningRepository` 对应的读取与写入能力。
-2. 以 `DATA_BACKEND=local|prisma` 作为显式选择，默认仍是 `local`，避免没有 PostgreSQL 时破坏现有演示。
-3. 按安全边界实现：Argon2id Flag 校验、刷新会话哈希、请求限流、审计活动、挑战解题事务、积分与技能更新。
+1. 配置可用 PostgreSQL 后，以 `DATA_BACKEND=prisma` 执行 `db:push`、`db:seed` 和端到端 API 测试。
+2. 验证并发重复提交不会重复计分，提示扣分与训练会话状态按事务保持一致。
+3. 建立正式 Prisma migration，并通过空库和升级库演练验证迁移。
 4. 将控制器和前端 API 返回模型转换为 `packages/shared` 内的 DTO；移除接口层宽泛 `any`。
-5. 编写不依赖 Docker 的单元测试与契约测试；有 PostgreSQL 后再补充集成测试、迁移和种子导入。
-6. 阶段验收后更新 `WORK_HANDOFF.md` 与本文件，提交并推送 `origin/main`。
+5. 阶段验收后更新 `WORK_HANDOFF.md` 与本文件，提交并推送 `origin/main`。
 
 ## 随后的阶段
 

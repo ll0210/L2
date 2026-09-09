@@ -14,7 +14,7 @@ export interface LearningRepository {
   register(input: { username?: string; email?: string; password?: string }): Promise<any>;
   me(user: LearningRecord): any;
   userSkills(user: LearningRecord): any;
-  listChallenges(user?: LearningRecord): any[];
+  listChallenges(user?: LearningRecord): any[] | Promise<any[]>;
   challengeDetail(slug: string, user?: LearningRecord): any;
   workspace(slug: string, user: LearningRecord): any;
   submit(slug: string, user: LearningRecord, flag: string): any;
@@ -25,8 +25,8 @@ export interface LearningRepository {
   stopLab(slug: string, user: LearningRecord): any;
   rangeOverview(user?: LearningRecord): any;
   dashboardStats(user?: LearningRecord): any;
-  dashboardEvents(): any[];
-  leaderboard(): any[];
+  dashboardEvents(): any[] | Promise<any[]>;
+  leaderboard(): any[] | Promise<any[]>;
   skillGraph(): any;
   learningOverview(user?: LearningRecord): any;
   attackScenario(): any;
@@ -35,4 +35,3 @@ export interface LearningRepository {
 }
 
 export const LEARNING_REPOSITORY = Symbol('LEARNING_REPOSITORY');
-

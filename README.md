@@ -25,6 +25,10 @@ The production schema is ready to be checked without starting Docker. Copy `apps
 
 The Prisma seed contains only Argon2id flag-verification hashes. It is not an authoring source for plaintext flags, and no challenge endpoint exposes either plaintext flags or their hashes.
 
+When PostgreSQL is available, set `DATA_BACKEND=prisma` in the server environment. The server loads `apps/server/.env` before choosing its repository, defaults to `local`, and rejects any other value. In production Prisma mode it also requires distinct `JWT_ACCESS_SECRET` and `ATTEMPT_HASH_SECRET` values. `corepack pnpm db:check` type-checks the TypeScript Prisma seed without connecting to a database.
+
+`DATA_BACKEND=prisma` selects the transactional `PrismaLearningRepository`; `DATA_BACKEND=local` selects the JSON demonstration store. The PostgreSQL connection, migration execution, and integration tests still require a database and remain deferred with Docker.
+
 ## Demo identities
 
 | User | Email | Password | Role |
