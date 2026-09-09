@@ -53,7 +53,7 @@ Docker、PostgreSQL/Redis/Prisma 迁移及 Socket.IO 实时层放在本地闭环
 
 请在第一次需要推送前提供目标仓库的 HTTPS 或 SSH 地址、目标分支（默认 `main`），并确保当前环境已拥有该仓库的写入权限（SSH Key 或 GitHub 登录令牌）。如需新建仓库，还需说明仓库名称及公开/私有属性。
 
-已初始化本地 Git 仓库并配置远程 `https://github.com/ll0210/L2.git`。首个提交 `a3cdd2d`（`feat: establish runnable CyberQuest local platform`）已成功推送至 `origin/main`，本地 `main` 正跟踪远程分支。
+已初始化本地 Git 仓库并配置远程 `https://github.com/ll0210/L2.git`。首个提交 `a3cdd2d`（`feat: establish runnable CyberQuest local platform`）和首个交接同步提交 `087dc50`（`docs: record initial GitHub delivery`）均已成功推送至 `origin/main`，本地 `main` 正跟踪远程分支。
 
 ## 版本控制约定
 
