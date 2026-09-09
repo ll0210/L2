@@ -173,3 +173,31 @@ export interface AttackScenario {
   phases: Array<{ id: string; time: string; title: string; mitre: string; detail: string }>;
   controls: Array<{ name: string; status: string; description: string }>;
 }
+
+export interface RealtimeReadyEvent {
+  connectedAt: string;
+}
+
+export interface ChallengeSolvedEvent {
+  challengeRef: string;
+  points: number;
+  isFirstBlood: boolean;
+  occurredAt: string;
+}
+
+export interface LeaderboardUpdatedEvent {
+  occurredAt: string;
+}
+
+export interface LabStatusEvent {
+  challengeRef: string;
+  session: LabSession;
+  occurredAt: string;
+}
+
+export interface RealtimeEventMap {
+  'session.ready': RealtimeReadyEvent;
+  'challenge.solved': ChallengeSolvedEvent;
+  'leaderboard.updated': LeaderboardUpdatedEvent;
+  'lab.status': LabStatusEvent;
+}

@@ -6,6 +6,7 @@ import { LEARNING_REPOSITORY } from './modules/learning.repository';
 import { PrismaLearningRepository } from './modules/prisma-learning.repository';
 import { PrismaService } from './modules/prisma.service';
 import { loadRuntimeEnvironment } from './common/environment';
+import { RealtimeGateway } from './modules/realtime.gateway';
 
 loadRuntimeEnvironment();
 const dataBackend = process.env.DATA_BACKEND ?? 'local';
@@ -21,6 +22,6 @@ const storageProviders = dataBackend === 'prisma'
 /** 单机开发模式：无需 Docker、PostgreSQL 或 Redis 即可体验完整学习闭环。 */
 @Module({
   controllers: [HealthController, LocalController],
-  providers: storageProviders,
+  providers: [RealtimeGateway, ...storageProviders],
 })
 export class AppModule {}

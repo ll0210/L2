@@ -1,6 +1,6 @@
 # CyberQuest 2.0 交接文档
 
-最后更新：2026-09-09（第五阶段：共享响应契约与课程对齐）
+最后更新：2026-09-09（第六阶段：安全 Socket.IO 实时事件）
 
 ## 当前目标
 
@@ -46,6 +46,14 @@
 - Prisma `Course` 模型新增 `challengeSlug` 与 `chapters`，种子为 3 条课程补齐章节和对应挑战；Prisma 返回同时映射 `difficulty` 到前端兼容的 `level`。
 - 本地学习概览补齐 `progress` 字段，保持 local 与 prisma 响应契约一致。
 
+### 第六阶段：安全 Socket.IO 实时事件（本次完成，待推送）
+
+- 新增认证型 `/events` Socket.IO gateway；握手必须携带有效 JWT，伪造、过长或缺失 Token 会被立即断开。
+- 网关不接受任何业务 mutation；题目提交、提示和训练状态修改仍只走 DTO 校验后的 REST API。
+- 服务端只推送最小脱敏事件：`session.ready`、`challenge.solved`、`leaderboard.updated`，以及仅发送至当前用户房间的 `lab.status`。
+- 共享包提供实时事件类型；前端登录后可选连接、退出时断开，连接失败平稳维持 REST 功能并显示连接状态。
+- README 已记录事件命名空间、安全边界与 Redis/Docker 尚未接入的事实。
+
 ## 本次验证
 
 - `corepack pnpm --filter @cyberquest/server exec prisma validate`：通过（临时 PostgreSQL 连接串，仅校验模型，不连接数据库）。
@@ -58,6 +66,7 @@
 - DTO 回归：有效登录与题目读取通过；登录请求混入 `role` 字段被正确拒绝为 HTTP 400。
 - 学习中心回归：demo 登录后返回 3 条课程；首条课程具有配套挑战、3 个章节与数值进度。
 - `corepack pnpm build`、`db:check`、`db:validate`、明文 Flag 扫描和 `git diff --check` 均通过。
+- 实时回归：有效 JWT 收到私有 `lab.status`（`RUNNING`）事件；伪造 JWT 被 Socket.IO 服务器断开；事件字段扫描确认没有 Flag、哈希或 Token。
 - 还没有可用 PostgreSQL，因此 Prisma 分支只完成编译/Schema/种子检查，尚未做真实数据库集成验证。
 
 ## GitHub 状态
@@ -68,6 +77,7 @@
 - 第二阶段提交 `9c52a5b`（`feat: harden prisma seed and data model`）已推送到同一分支；运行态 JSON 与任何 `.env` 文件不得提交。
 - 第三阶段提交 `ab1cac6` 与第四阶段提交 `0d9ef3d` 已成功推送到 `origin/main`；此前 HTTPS 连接重置的问题已在重试后恢复。
 - 第五阶段提交 `eb528c6` 已成功推送到 `origin/main`。
+- 第六阶段会作为独立提交推送到同一分支。
 - 工作区发现 `workspace-preview.png` 的既有删除状态，本阶段不会恢复、删除或提交它。
 - 当前仓库专用提交身份：`Codex <codex@local>`，没有修改全局 Git 设置。
 
@@ -80,7 +90,7 @@
 
 ## 下一位执行者从这里开始
 
-1. 为 Socket.IO 建立鉴权网关与最小公开事件（解题、排行榜、训练状态）；Redis 适配器仍等待真实基础设施。
+1. 补充 OpenAPI/错误码/环境变量文档，并将验证过程自动化为可重复脚本。
 2. 获得 PostgreSQL 环境后，执行 `db:push` / `db:seed`，并对 Prisma 分支做认证、解题并发、提示、会话与排行榜集成测试；再生成正式 migration。
 3. 继续把仓储内部的 `Record<string, any>` 限缩到领域 DTO，优先处理本地 JSON 实现。
 4. 用户确认 Docker 条件后，再运行 PostgreSQL/Redis、生成迁移并验证 compose；不要提前宣称容器化可用。

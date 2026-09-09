@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuth } from './stores/auth'
+import { realtimeState } from './realtime'
 const auth = useAuth()
 </script>
 
@@ -12,6 +13,7 @@ const auth = useAuth()
       <RouterLink to="/learning">学习中心</RouterLink><RouterLink to="/leaderboard">英雄榜</RouterLink>
     </nav>
     <div class="top-status"><b></b>系统运行中</div>
+    <span v-if="realtimeState.connected" class="top-status">实时已连接</span>
     <RouterLink v-if="!auth.user" class="login" to="/login">登录平台</RouterLink>
     <button v-else class="ghost" @click="auth.logout()">{{ auth.user.username }} · 退出</button>
   </header>

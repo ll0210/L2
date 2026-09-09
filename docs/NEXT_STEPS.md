@@ -12,15 +12,15 @@
 - 第三、四阶段提交 `ab1cac6`、`0d9ef3d` 已同步至 `origin/main`。
 - 共享响应 DTO、课程章节和课程进度已在 local / prisma 两个仓储之间对齐。
 - 第五阶段提交 `eb528c6` 已同步至 `origin/main`。
+- `/events` Socket.IO 网关已完成 JWT 握手校验、私有训练状态房间和脱敏公开事件；Redis fan-out 尚未接入。
 - Docker 暂缓，不是当前阶段的前置条件。
 
-## 下一大阶段：安全的 Socket.IO 实时事件
+## 下一大阶段：API 文档与可重复验收
 
-1. 新增 Socket.IO gateway，验证握手 JWT，仅允许安全的教学事件订阅。
-2. 解题、排行榜和训练状态只推送脱敏事件；不得通过 Socket 泄漏 Flag、哈希或跨用户私有数据。
-3. 前端以可选方式消费事件，连接失败必须平稳降级到 REST。
-4. 之后配置 PostgreSQL，以 `DATA_BACKEND=prisma` 执行 `db:push`、`db:seed` 和端到端 API 测试；再建立正式 migration。
-5. 阶段验收后更新 `WORK_HANDOFF.md` 与本文件，提交并推送 `origin/main`。
+1. 生成 OpenAPI 规范、请求/响应样例、错误码表和 WebSocket 事件契约。
+2. 将现有本地 API、DTO 拒绝和 Socket 握手检查纳入不依赖 Docker 的自动验收脚本。
+3. 之后配置 PostgreSQL，以 `DATA_BACKEND=prisma` 执行 `db:push`、`db:seed` 和端到端 API 测试；再建立正式 migration。
+4. 阶段验收后更新 `WORK_HANDOFF.md` 与本文件，提交并推送 `origin/main`。
 
 ## 随后的阶段
 

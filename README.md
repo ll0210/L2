@@ -6,7 +6,7 @@ AI-assisted, safety-first CTF learning platform with a Vue 3 client and NestJS/P
 
 The default development path is a self-contained local learning platform. It uses the JSON data store in `apps/server/data/` to provide real authentication, challenge state, scoring, skills, hints, audit activities, guided training sessions, leaderboards, learning paths, the attack-map scenario, and a safe Mock AI tutor. The local session is deliberately not a container shell and does not reach external targets.
 
-The PostgreSQL, Redis, Prisma, Socket.IO and Docker definitions remain in the repository as the next production-architecture phase. They are not required to run the current verified local demonstration loop.
+The PostgreSQL, Redis and Docker definitions remain in the repository as the next production-architecture phase. They are not required to run the current verified local demonstration loop.
 
 ## Quick start
 
@@ -38,11 +38,11 @@ When PostgreSQL is available, set `DATA_BACKEND=prisma` in the server environmen
 
 ## Verification
 
-Run `corepack pnpm build`. With the API running, `corepack pnpm verify:demo` checks demo login plus seeded challenges and skills. The local API also supports challenge workspaces, hint unlocks, server-side hash validation, score/skill updates, audit activities, and time-limited guided sessions. Socket broadcasts are part of the later realtime stage.
+Run `corepack pnpm build`. With the API running, `corepack pnpm verify:demo` checks demo login plus seeded challenges and skills. The local API also supports challenge workspaces, hint unlocks, server-side hash validation, score/skill updates, audit activities, time-limited guided sessions, and authenticated realtime notifications.
 
 ## API and realtime
 
-REST endpoints are prefixed with `/api`: auth, challenges, dashboard, skills, labs, AI, courses and leaderboard. The current local stage exposes the API endpoints used by the client. Socket events, Redis-backed leaderboard updates and Docker-backed labs are scheduled for the production-architecture stage.
+REST endpoints are prefixed with `/api`: auth, challenges, dashboard, skills, labs, AI, courses and leaderboard. The authenticated Socket.IO namespace is `/events`; it emits `session.ready`, `challenge.solved`, `leaderboard.updated`, and private `lab.status` events. Socket.IO never accepts learning mutations, and event payloads exclude flags, hashes, access tokens, and cross-user lab details. Redis-backed fan-out and Docker-backed labs remain deferred.
 
 Flags are stored only as server-side hashes in the local data store and are never returned by challenge endpoints. The production database migration will replace the local SHA-256 compatibility format with Argon2 or a peppered server-side hash. The `Mock` AI provider remains available without an external key. `OPENAI_API_KEY` and `AI_PROVIDER` are reserved for a production provider implementation.
 
