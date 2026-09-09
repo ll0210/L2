@@ -9,6 +9,7 @@
 - 第二阶段安全数据模型提交 `9c52a5b` 已推送至 `origin/main`。
 - `DATA_BACKEND=local|prisma` 已可切换仓储实现；Prisma 分支尚待真实 PostgreSQL 集成验证。
 - 输入 DTO、白名单与未知字段拒绝已覆盖认证、Flag、训练会话和 AI 请求。
+- 第三、四阶段提交 `ab1cac6`、`0d9ef3d` 已同步至 `origin/main`。
 - Docker 暂缓，不是当前阶段的前置条件。
 
 ## 下一大阶段：API 响应 DTO 与仓储类型收紧

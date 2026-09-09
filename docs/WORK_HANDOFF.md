@@ -56,7 +56,7 @@
 - 分支：`main`
 - 已推送的第一阶段基线：`a3cdd2d`、`087dc50`、`c3ca968`。
 - 第二阶段提交 `9c52a5b`（`feat: harden prisma seed and data model`）已推送到同一分支；运行态 JSON 与任何 `.env` 文件不得提交。
-- 第三阶段提交 `ab1cac6` 已在本地创建；HTTPS 传输两次被远端重置，尚未同步成功。下一次成功推送会一并上传该提交及本阶段。
+- 第三阶段提交 `ab1cac6` 与第四阶段提交 `0d9ef3d` 已成功推送到 `origin/main`；此前 HTTPS 连接重置的问题已在重试后恢复。
 - 工作区发现 `workspace-preview.png` 的既有删除状态，本阶段不会恢复、删除或提交它。
 - 当前仓库专用提交身份：`Codex <codex@local>`，没有修改全局 Git 设置。
 
