@@ -38,7 +38,7 @@
 - 远程仓库：`https://github.com/ll0210/L2.git`
 - 分支：`main`
 - 已推送的第一阶段基线：`a3cdd2d`、`087dc50`、`c3ca968`。
-- 本文档所在的第二阶段提交会在验证后推送到同一分支；运行态 JSON 与任何 `.env` 文件不得提交。
+- 第二阶段提交 `9c52a5b`（`feat: harden prisma seed and data model`）已推送到同一分支；运行态 JSON 与任何 `.env` 文件不得提交。
 - 当前仓库专用提交身份：`Codex <codex@local>`，没有修改全局 Git 设置。
 
 ## 重要实现约束

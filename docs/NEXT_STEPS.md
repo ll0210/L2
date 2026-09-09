@@ -6,6 +6,7 @@
 
 - 本地 JSON 教学闭环可运行并已完成 GitHub 初始交付。
 - Prisma Schema 已可校验和生成客户端；生产种子不含明文 Flag。
+- 第二阶段安全数据模型提交 `9c52a5b` 已推送至 `origin/main`。
 - Docker 暂缓，不是当前阶段的前置条件。
 
 ## 下一大阶段：可切换的 Prisma 持久化层
