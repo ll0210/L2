@@ -1,6 +1,6 @@
 # CyberQuest 2.0 交接文档
 
-最后更新：2026-09-09（本地闭环阶段完成）
+最后更新：2026-09-09（本地闭环与数据治理阶段已推送）
 
 ## 当前目标
 
@@ -53,4 +53,10 @@ Docker、PostgreSQL/Redis/Prisma 迁移及 Socket.IO 实时层放在本地闭环
 
 请在第一次需要推送前提供目标仓库的 HTTPS 或 SSH 地址、目标分支（默认 `main`），并确保当前环境已拥有该仓库的写入权限（SSH Key 或 GitHub 登录令牌）。如需新建仓库，还需说明仓库名称及公开/私有属性。
 
-已初始化本地 Git 仓库并配置远程 `https://github.com/ll0210/L2.git`，正在创建首个可推送提交。目标分支为 `main`。
+已初始化本地 Git 仓库并配置远程 `https://github.com/ll0210/L2.git`。首个提交 `a3cdd2d`（`feat: establish runnable CyberQuest local platform`）已成功推送至 `origin/main`，本地 `main` 正跟踪远程分支。
+
+## 版本控制约定
+
+- 当前 Git 提交身份仅为本地仓库级别的 `Codex <codex@local>`，未修改全局 Git 身份。
+- 每个后续可验收大阶段都应先运行相应验证，再提交并推送到 `origin/main`。
+- 运行时文件 `apps/server/data/cyberquest.local.json` 已忽略，不能被加入提交。
