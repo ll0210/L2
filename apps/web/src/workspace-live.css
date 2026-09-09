@@ -1,0 +1,548 @@
+/*
+ * Workspace finishing layer
+ * Loaded after the legacy workspace sheets.  It keeps the local-learning
+ * content calm and readable while making the stateful controls feel like a
+ * single, deliberate product surface.
+ */
+.focus-workspace{
+  --ws-ink:#17233b;
+  --ws-muted:#6d7b94;
+  --ws-line:#e3e9f3;
+  --ws-soft:#f5f7fc;
+  --ws-blue:#315cf6;
+  --ws-blue-2:#5c77f5;
+  --ws-green:#169d67;
+  --ws-shadow:0 18px 45px rgba(26,43,78,.08);
+  max-width:1360px;
+  padding-top:34px;
+  padding-bottom:84px;
+}
+
+.focus-workspace .challenge-banner{
+  min-height:204px;
+  isolation:isolate;
+  align-items:flex-end;
+  padding:32px 36px 29px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 83% 18%,rgba(125,151,255,.36),transparent 25%),
+    radial-gradient(circle at 22% 115%,rgba(42,193,255,.16),transparent 38%),
+    linear-gradient(118deg,#14223f 0%,#1d3158 52%,#18284b 100%);
+  box-shadow:0 24px 56px rgba(22,37,70,.18);
+}
+
+.focus-workspace .challenge-banner:before{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  opacity:.7;
+  background-image:linear-gradient(115deg,transparent 48%,rgba(203,219,255,.075) 48.2%,transparent 48.5%);
+  background-size:58px 58px;
+  mask-image:linear-gradient(90deg,transparent 4%,#000 38%,#000 100%);
+}
+
+.focus-workspace .challenge-banner:after{
+  width:405px;
+  height:405px;
+  top:-270px;
+  right:-98px;
+  border-color:rgba(195,211,255,.28);
+  box-shadow:0 0 0 38px rgba(187,206,255,.055),0 0 0 77px rgba(187,206,255,.038),0 0 0 117px rgba(187,206,255,.025);
+}
+
+.focus-workspace .challenge-banner h1{
+  max-width:850px;
+  margin:9px 0 11px;
+  font-size:clamp(34px,4vw,50px);
+  line-height:1.14;
+  letter-spacing:-2.4px;
+  text-shadow:0 2px 0 rgba(8,18,40,.12);
+}
+
+.focus-workspace .challenge-banner p{
+  max-width:800px;
+  color:#d2ddf4;
+  font-size:14px;
+  line-height:1.8;
+}
+
+.focus-workspace .challenge-banner .eyebrow{color:#b6c8ff}
+.focus-workspace .banner-tags{gap:8px;margin-top:18px}
+.focus-workspace .banner-tags i{
+  padding:5px 9px;
+  border-color:rgba(214,226,255,.25);
+  background:rgba(243,247,255,.09);
+  color:#dce7ff;
+  letter-spacing:.1px;
+}
+
+.focus-workspace .banner-score{
+  position:relative;
+  min-width:144px;
+  padding:14px 3px 4px 22px;
+  border-left:1px solid rgba(213,226,255,.22);
+}
+
+.focus-workspace .banner-score:before{
+  content:'';
+  position:absolute;
+  top:18px;
+  left:-2px;
+  width:3px;
+  height:42px;
+  border-radius:8px;
+  background:linear-gradient(#75d6ff,#7d87ff);
+  box-shadow:0 0 14px rgba(119,173,255,.7);
+}
+
+.focus-workspace .banner-score span{color:#bdcbe8;letter-spacing:.5px}
+.focus-workspace .banner-score b{
+  margin:3px 0 4px;
+  font-size:45px;
+  letter-spacing:-2px;
+}
+.focus-workspace .banner-score em{background:rgba(255,255,255,.12);color:#dce7fb}
+.focus-workspace .banner-score em.done{background:rgba(71,211,141,.18);color:#9cf4c6}
+
+.focus-workspace .workspace-layout{
+  grid-template-columns:minmax(0,1fr) 332px;
+  gap:22px;
+  margin-top:22px;
+}
+
+.focus-workspace .work-main,.focus-workspace .work-context{gap:18px}
+
+.focus-workspace .goal-panel,
+.focus-workspace .access-panel,
+.focus-workspace .solve-flow,
+.focus-workspace .session-card,
+.focus-workspace .hints-card,
+.focus-workspace .tutor-card,
+.focus-workspace .review-panel{
+  border-color:var(--ws-line);
+  box-shadow:var(--ws-shadow);
+}
+
+.focus-workspace .goal-panel{
+  position:relative;
+  overflow:hidden;
+  align-items:stretch;
+  padding:24px 26px;
+  border-radius:18px;
+  background:linear-gradient(115deg,#fff 0%,#fbfcff 66%,#f2f6ff 100%);
+}
+
+.focus-workspace .goal-panel:before{
+  content:'';
+  position:absolute;
+  top:20px;
+  bottom:20px;
+  left:0;
+  width:4px;
+  border-radius:0 8px 8px 0;
+  background:linear-gradient(#5e7cff,#34b9e9);
+}
+
+.focus-workspace .goal-panel .eyebrow{color:#5572cd}
+.focus-workspace .goal-panel h2{
+  max-width:820px;
+  margin-top:9px;
+  color:var(--ws-ink);
+  font-size:20px;
+  font-weight:800;
+  line-height:1.55;
+}
+
+.focus-workspace .goal-status{
+  min-width:142px;
+  padding:6px 0 6px 24px;
+  border-left-color:#dfe7f4;
+  justify-items:start;
+}
+
+.focus-workspace .goal-status span{font-size:11px;color:#70809d}
+.focus-workspace .goal-status b{color:#2954d9;font-size:18px}
+
+/* Connection and attachment resources deliberately read like a small launchpad. */
+.focus-workspace .access-panel{
+  position:relative;
+  overflow:hidden;
+  border-radius:18px;
+  background:#fff;
+}
+
+.focus-workspace .access-panel:before{
+  content:'训练资源';
+  display:block;
+  padding:12px 20px 10px;
+  border-bottom:1px solid #edf1f6;
+  color:#7587b0;
+  font:700 10px 'JetBrains Mono';
+  letter-spacing:1px;
+  background:linear-gradient(90deg,#f9fbff,#fff);
+}
+
+.focus-workspace .access-item{position:relative;padding:17px 20px;gap:15px}
+.focus-workspace .access-item+.access-item{border-top-color:#edf1f6}
+.focus-workspace .access-item:hover{background:linear-gradient(90deg,#fbfcff,#f7f9ff)}
+.focus-workspace .access-mark{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  background:linear-gradient(145deg,#e6f8ff,#def0ff);
+  color:#187fa8;
+  box-shadow:inset 0 0 0 1px #c5e9f9;
+}
+.focus-workspace .access-item.file .access-mark{
+  background:linear-gradient(145deg,#f4efff,#eee8ff);
+  color:#7454cc;
+  box-shadow:inset 0 0 0 1px #e0d5ff;
+}
+.focus-workspace .access-item small{color:#6880ad;letter-spacing:.4px}
+.focus-workspace .access-item b{margin:4px 0;color:#1d2d49;font-size:15px}
+.focus-workspace .access-item p{color:#73819a;line-height:1.5}
+.focus-workspace .access-item code{
+  max-width:540px;
+  margin-top:6px;
+  color:#267397;
+  font-size:10.5px;
+}
+
+.focus-workspace .access-actions{align-items:center;gap:8px}
+.focus-workspace .access-actions a,
+.focus-workspace .access-item>a{
+  min-height:36px;
+  padding:9px 12px;
+  border-radius:9px;
+  background:linear-gradient(135deg,#315cf6,#4b6bf2);
+  box-shadow:0 8px 16px rgba(49,92,246,.2);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.focus-workspace .access-actions a:hover,.focus-workspace .access-item>a:hover{transform:translateY(-1px);box-shadow:0 12px 20px rgba(49,92,246,.27)}
+.focus-workspace .access-actions .outline{min-height:36px;padding:8px 10px;border-radius:9px}
+.focus-workspace .outline{background:#fff;border-color:#d9e2ef;color:#40516f;box-shadow:none}
+.focus-workspace .outline:hover{border-color:#aebfeb;background:#f7f9ff;color:#2948a8}
+
+.focus-workspace .target-health{
+  position:relative;
+  align-self:auto;
+  padding:6px 9px;
+  border:1px solid transparent;
+  border-radius:999px;
+  font-weight:700;
+  letter-spacing:.1px;
+}
+.focus-workspace .target-health.ready{border-color:#caeedc;background:#f0fbf5;color:#168a5b}
+.focus-workspace .target-health.error{border-color:#ffd8de;background:#fff5f6;color:#b83e58}
+.focus-workspace .target-health.checking{border-color:#dbe3f2;background:#f5f7fb;color:#6f7d96}
+.focus-workspace .target-health.checking:before{animation:workspace-pulse 1.25s ease-in-out infinite}
+@keyframes workspace-pulse{50%{opacity:.28;transform:scale(.75)}}
+
+.focus-workspace .resource-note{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  margin:0 20px 17px;
+  padding:9px 10px;
+  border:1px solid #d8e8ff;
+  border-radius:10px;
+  background:#f4f8ff;
+  color:#62779c;
+  font-size:11px;
+  line-height:1.6;
+}
+.focus-workspace .resource-note:before{content:'i';display:grid;place-items:center;flex:none;width:15px;height:15px;border-radius:50%;background:#dce9ff;color:#4164c7;font:800 10px 'JetBrains Mono'}
+
+/* The submit flow has a quieter document-like rhythm, rather than a stack of generic cards. */
+.focus-workspace .solve-flow{
+  padding:26px;
+  border-radius:18px;
+  background:#fff;
+}
+.focus-workspace .solve-flow>header{align-items:center}
+.focus-workspace .solve-flow .eyebrow{color:#526fca}
+.focus-workspace .solve-flow h2{margin-top:7px;color:var(--ws-ink);font-size:25px;letter-spacing:-.8px}
+.focus-workspace .step-count{padding:7px 10px;border:1px solid #dae4ff;border-radius:999px;background:#f3f6ff;color:#4968c9;font-weight:700}
+.focus-workspace .solve-flow ol{position:relative;gap:10px;margin:23px 0 21px}
+.focus-workspace .solve-flow ol:before{
+  content:'';
+  position:absolute;
+  top:27px;
+  bottom:27px;
+  left:21px;
+  width:1px;
+  background:linear-gradient(#95aaf8,#dfe6fb);
+}
+.focus-workspace .solve-flow li{
+  position:relative;
+  align-items:flex-start;
+  gap:14px;
+  min-height:67px;
+  padding:13px 14px;
+  border:1px solid transparent;
+  border-radius:12px;
+  background:linear-gradient(90deg,#f7f9fe,#fbfcff);
+}
+.focus-workspace .solve-flow li:hover{border-color:#dce5fa;background:#f5f8ff}
+.focus-workspace .solve-flow li i{
+  display:grid;
+  place-items:center;
+  position:relative;
+  z-index:1;
+  width:24px;
+  height:24px;
+  border:1px solid #cdd9fb;
+  border-radius:50%;
+  background:#fff;
+  color:#4165d9;
+  font-size:10px;
+}
+.focus-workspace .solve-flow li b{color:#24344f;font-size:13px}
+.focus-workspace .solve-flow li p{color:#6d7d96;line-height:1.6}
+
+.focus-workspace .submit-row{padding:5px;border:1px solid #e0e7f2;border-radius:12px;background:#f7f9fc;gap:7px}
+.focus-workspace .submit-row input{min-height:42px;border:0;background:transparent;box-shadow:none!important}
+.focus-workspace .submit-row input:focus{box-shadow:none!important}
+.focus-workspace .submit-row button{min-width:108px;min-height:42px;border-radius:9px}
+.focus-workspace .result{min-height:18px;margin:11px 3px 0;padding-left:8px;border-left:2px solid currentColor;line-height:1.45}
+
+/* Completed tasks use a strong but compact success moment and a useful review drawer. */
+.focus-workspace .completion-panel{
+  position:relative;
+  grid-template-columns:54px minmax(0,1fr) auto;
+  overflow:hidden;
+  padding:25px 26px;
+  border-color:#ccebdc;
+  border-radius:18px;
+  background:linear-gradient(110deg,#f0fbf4 0%,#fff 55%,#f4fbf7 100%);
+  box-shadow:0 15px 32px rgba(28,121,79,.09);
+}
+.focus-workspace .completion-panel:after{
+  content:'';
+  position:absolute;
+  right:-44px;
+  bottom:-83px;
+  width:210px;
+  height:210px;
+  border:28px solid rgba(41,177,106,.08);
+  border-radius:50%;
+}
+.focus-workspace .completion-mark{width:48px;height:48px;background:linear-gradient(135deg,#26ad6e,#15935b);box-shadow:0 10px 22px rgba(22,157,103,.26)}
+.focus-workspace .completion-panel .eyebrow{color:#20875b}
+.focus-workspace .completion-panel h2{position:relative;z-index:1;margin:6px 0;color:#174531;font-size:21px}
+.focus-workspace .completion-panel p{position:relative;z-index:1;max-width:630px;color:#5c766b;line-height:1.7}
+.focus-workspace .completion-actions{position:relative;z-index:1;min-width:126px}
+.focus-workspace .completion-actions>a{border-radius:9px;background:linear-gradient(135deg,#315cf6,#5273f3);box-shadow:0 8px 16px rgba(49,92,246,.19)}
+.focus-workspace .completion-actions .outline{border-color:#cde7da;background:#fff;color:#257552}
+
+.focus-workspace .review-panel{
+  padding:25px 26px;
+  border-radius:18px;
+  background:#fff;
+}
+.focus-workspace .review-panel .eyebrow{color:#5872c6}
+.focus-workspace .review-panel h2{font-size:22px;letter-spacing:-.5px}
+.focus-workspace .review-panel>div{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.focus-workspace .review-panel p{
+  height:100%;
+  padding:14px 13px;
+  border:1px solid #e8edf5;
+  border-radius:11px;
+  background:linear-gradient(145deg,#f9fbff,#f4f7fc);
+  color:#5e6e87;
+  line-height:1.65;
+}
+.focus-workspace .review-panel i{display:block;margin:0 0 8px;color:#315ce3}
+
+/* Context cards are intentionally distinct: session = active, hints = reference, tutor = reflective. */
+.focus-workspace .session-card,
+.focus-workspace .hints-card,
+.focus-workspace .tutor-card{
+  position:relative;
+  overflow:hidden;
+  padding:21px;
+  border-radius:18px;
+  background:#fff;
+}
+
+.focus-workspace .session-card{border-color:#dbe5fb;background:linear-gradient(160deg,#fff 0%,#f5f8ff 100%)}
+.focus-workspace .live-session-card{position:sticky;top:94px;border-color:#cbd9fb;background:linear-gradient(160deg,#fafdff 0%,#edf3ff 100%)}
+.focus-workspace .session-card:before{
+  content:'';
+  position:absolute;
+  top:0;
+  right:0;
+  width:88px;
+  height:4px;
+  border-radius:0 18px 0 8px;
+  background:linear-gradient(90deg,#40bce9,#566bf0);
+}
+.focus-workspace .session-card header,.focus-workspace .hints-card header{padding-bottom:12px;border-bottom:1px solid #e9eef7}
+.focus-workspace .session-card header .eyebrow{color:#5270c9}
+.focus-workspace .session-card header em{padding:4px 7px;border-radius:999px;background:#eaf9f0;color:#168d5c;font-size:10px}
+.focus-workspace .session-card h3{margin:17px 0 8px;color:#20304b;font-size:21px;line-height:1.35}
+.focus-workspace .session-card>p{color:#6a7a95;line-height:1.75}
+.focus-workspace .session-card>button{min-height:43px;margin-top:18px;border-radius:10px}
+.focus-workspace .session-message{padding:9px 10px;border-radius:9px;background:#edf9f2;color:#168d5c!important;font-size:11px;line-height:1.55}
+.focus-workspace .attempt-box{margin-top:18px;padding-top:15px;border-top-color:#e3eaf4}
+.focus-workspace .attempt-box>span{font-weight:700;color:#7686a2}
+.focus-workspace .attempt-box>b{color:#1c3155}
+.focus-workspace .attempt-box p{padding:8px 0 0;color:#6d7c95}
+.focus-workspace .empty-attempt{margin:10px 0 0;padding:9px!important;border-radius:8px;background:#f5f7fb;color:#7b899f!important;font-size:11px}
+
+.focus-workspace .hints-card header .eyebrow{color:#7d62c4}
+.focus-workspace .hints-card header em{color:#8a66d1}
+.focus-workspace .hints-card article{padding:14px 0;border-top-color:#edf0f5}
+.focus-workspace .hints-card article:first-of-type{border-top:0}
+.focus-workspace .hints-card article small{color:#7a88a1}
+.focus-workspace .hints-card article b{color:#263650;font-size:12px}
+.focus-workspace .hints-card article p{padding:10px;border-left:3px solid #75cfa0;border-radius:4px 9px 9px 4px;background:#eefbf4;color:#277f57;font-size:11.5px}
+.focus-workspace .hints-card article>span{padding-top:4px;color:#1c9b64;font-size:10px;white-space:nowrap}
+.focus-workspace .hints-card .outline{padding:6px 8px;border-color:#ded7fb;background:#faf8ff;color:#6d53bb}
+
+.focus-workspace .tutor-card{
+  border-color:#e1e5fa;
+  background:linear-gradient(160deg,#fff 0%,#f8f8ff 100%);
+}
+.focus-workspace .tutor-card:before{
+  content:'AI';
+  position:absolute;
+  top:18px;
+  right:19px;
+  display:grid;
+  place-items:center;
+  width:28px;
+  height:28px;
+  border:1px solid #d9ddff;
+  border-radius:9px;
+  color:#6b62ca;
+  background:#f3f2ff;
+  font:800 10px 'JetBrains Mono';
+}
+.focus-workspace .tutor-card .eyebrow{color:#735ec3}
+.focus-workspace .tutor-card h3{max-width:230px;margin:10px 0 8px;color:#25304e;font-size:20px;line-height:1.35}
+.focus-workspace .tutor-card>p{color:#697792;line-height:1.7}
+.focus-workspace .tutor-card textarea{min-height:105px;border-radius:10px;background:#fff;border-color:#dce3f2;line-height:1.6}
+.focus-workspace .tutor-card textarea:focus{border-color:#7a83ea;box-shadow:0 0 0 3px rgba(111,126,237,.1)}
+.focus-workspace .tutor-card button{min-height:40px;border-radius:9px}
+.focus-workspace .tutor-card .tutor-answer{margin:12px 0 0;padding:11px;border-radius:10px;background:#f1f3ff;color:#536189;line-height:1.7}
+
+.focus-workspace .terminal-block{
+  position:relative;
+  overflow:hidden;
+  padding:19px 20px 17px;
+  border-radius:18px;
+  background:linear-gradient(145deg,#111b31,#172442);
+  box-shadow:0 18px 34px rgba(18,31,58,.18);
+}
+.focus-workspace .terminal-block:before{
+  content:'';
+  position:absolute;
+  top:0;
+  right:0;
+  width:150px;
+  height:100%;
+  background:linear-gradient(135deg,transparent 34%,rgba(115,145,255,.09));
+  pointer-events:none;
+}
+.focus-workspace .terminal-block header{position:relative;z-index:1;padding-bottom:14px;border-bottom:1px solid rgba(197,213,255,.13)}
+.focus-workspace .terminal-block header b{font-size:13px;letter-spacing:.2px}
+.focus-workspace .terminal-block pre{position:relative;z-index:1;height:150px;margin-top:13px;padding-right:8px;line-height:1.75}
+.focus-workspace .terminal-block input{position:relative;z-index:1;min-height:40px;border-radius:9px;background:rgba(5,11,25,.68)}
+
+/* Optional hooks for the API-backed session status layer. */
+.focus-workspace .session-clock,
+.focus-workspace .session-timer,
+.focus-workspace .remaining-time,
+.focus-workspace .session-meter{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin:10px 0 2px;
+  padding:7px 9px;
+  border:1px solid #d7e4ff;
+  border-radius:8px;
+  background:#edf3ff;
+  color:#3155bd;
+  font:700 11px 'JetBrains Mono';
+}
+.focus-workspace .session-clock:before,.focus-workspace .session-timer:before,.focus-workspace .remaining-time:before,.focus-workspace .session-meter:before{content:'◷';font-size:14px}
+.focus-workspace .session-tools,.focus-workspace .session-controls{display:flex;gap:8px;margin-top:12px}
+.focus-workspace .session-tools button,.focus-workspace .session-controls button{flex:1;margin:0;min-height:37px;padding:8px 10px;font-size:11px}
+.focus-workspace .session-tools .outline,.focus-workspace .session-controls .outline{background:#fff;color:#52617e}
+.focus-workspace .session-tools .outline.danger,.focus-workspace .session-controls .outline.danger{border-color:#f1cbd3;background:#fff7f8;color:#bd4059}
+.focus-workspace .resource-status,.focus-workspace .health-note{margin-top:10px;padding:8px 9px;border-radius:9px;background:#f2f6fc;color:#687896;font-size:11px;line-height:1.55}
+
+/* The live session receives nested API data, so it needs a readable two-line meter rather than a generic inline chip. */
+.focus-workspace .live-session-card .session-meter{display:block;margin:14px 0 0;padding:12px;border-color:#d7e4ff;border-radius:12px;background:rgba(237,243,255,.82);font-family:inherit}
+.focus-workspace .live-session-card .session-meter:before{display:none}
+.focus-workspace .live-session-card .session-meter>div{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.focus-workspace .live-session-card .session-meter span{color:#627493;font-size:11px;font-weight:700}
+.focus-workspace .live-session-card .session-meter b{color:#244da9;font:800 25px/1 'JetBrains Mono',monospace;letter-spacing:-1px}
+.focus-workspace .live-session-card .session-meter p{margin:8px 0 0;color:#687a98;font-size:11px;font-weight:400;line-height:1.6}
+
+@media(max-width:1080px){
+  .focus-workspace .workspace-layout{grid-template-columns:minmax(0,1fr) 292px;gap:17px}
+  .focus-workspace .challenge-banner{padding:28px}
+  .focus-workspace .access-actions{flex-wrap:wrap;justify-content:flex-end}
+  .focus-workspace .target-health{order:-1}
+  .focus-workspace .review-panel>div{grid-template-columns:1fr}
+}
+
+@media(max-width:900px){
+  .focus-workspace .workspace-layout{grid-template-columns:1fr}
+  .focus-workspace .work-context{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+  .focus-workspace .tutor-card{grid-column:span 2}
+  .focus-workspace .session-card,.focus-workspace .hints-card{height:100%}
+}
+
+@media(max-width:650px){
+  .focus-workspace{padding-top:23px;padding-bottom:50px}
+  .focus-workspace .challenge-banner{min-height:0;padding:24px 21px 22px;border-radius:18px;gap:16px}
+  .focus-workspace .challenge-banner h1{font-size:33px;letter-spacing:-1.5px}
+  .focus-workspace .challenge-banner p{font-size:13px}
+  .focus-workspace .banner-score{width:100%;justify-items:start;padding:13px 0 0;border-top:1px solid rgba(213,226,255,.2);border-left:0}
+  .focus-workspace .banner-score:before{top:-2px;left:0;width:42px;height:3px}
+  .focus-workspace .banner-score b{font-size:37px}
+  .focus-workspace .workspace-layout{margin-top:14px;gap:14px}
+  .focus-workspace .work-main,.focus-workspace .work-context{gap:14px}
+  .focus-workspace .goal-panel{padding:20px 18px;border-radius:15px}
+  .focus-workspace .goal-panel h2{font-size:18px}
+  .focus-workspace .goal-status{width:100%;min-width:0;padding:13px 0 0;border-top:1px solid #e0e7f2;border-left:0}
+  .focus-workspace .access-panel{border-radius:15px}
+  .focus-workspace .access-item{align-items:flex-start;padding:15px}
+  .focus-workspace .access-item>div:nth-child(2){min-width:calc(100% - 55px)}
+  .focus-workspace .access-item code{max-width:67vw}
+  .focus-workspace .access-actions{width:100%;padding-left:55px;justify-content:flex-start}
+  .focus-workspace .access-actions a,.focus-workspace .access-actions .outline{flex:1;text-align:center}
+  .focus-workspace .access-item.file>a{margin-left:55px}
+  .focus-workspace .solve-flow{padding:20px 17px;border-radius:15px}
+  .focus-workspace .solve-flow h2{font-size:21px}
+  .focus-workspace .solve-flow>header{align-items:flex-start;gap:10px}
+  .focus-workspace .step-count{white-space:nowrap}
+  .focus-workspace .solve-flow li{padding:11px 10px}
+  .focus-workspace .submit-row{flex-wrap:wrap}
+  .focus-workspace .submit-row button{width:100%}
+  .focus-workspace .completion-panel{grid-template-columns:45px 1fr;padding:20px 18px;border-radius:15px}
+  .focus-workspace .completion-mark{width:43px;height:43px}
+  .focus-workspace .completion-panel h2{font-size:19px}
+  .focus-workspace .completion-actions{grid-column:1/-1;grid-template-columns:1fr 1fr;width:100%;margin-top:3px}
+  .focus-workspace .completion-actions>a{display:grid;place-items:center;padding:9px 6px}
+  .focus-workspace .review-panel{padding:20px 17px;border-radius:15px}
+  .focus-workspace .work-context{grid-template-columns:1fr}
+  .focus-workspace .tutor-card{grid-column:auto}
+  .focus-workspace .session-card,.focus-workspace .hints-card,.focus-workspace .tutor-card{padding:18px;border-radius:15px}
+  .focus-workspace .terminal-block{padding:16px;border-radius:15px}
+  .focus-workspace .terminal-block pre{height:130px;font-size:11px}
+  .focus-workspace .live-session-card{position:static}
+  .focus-workspace .resource-note{margin:0 15px 15px}
+}
+
+@media(max-width:520px){
+  .focus-workspace .access-actions{display:grid;grid-template-columns:1fr 1fr;width:100%;padding-left:0}
+  .focus-workspace .access-actions .target-health{grid-column:1/-1;justify-self:start}
+  .focus-workspace .access-item.file>a{width:calc(100% - 55px);margin-left:55px;text-align:center}
+  .focus-workspace .session-tools,.focus-workspace .session-controls{display:grid;grid-template-columns:1fr 1fr}
+}

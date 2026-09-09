@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: cyberquest
+      POSTGRES_PASSWORD: cyberquest
+      POSTGRES_DB: cyberquest
+    ports: ["5432:5432"]
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cyberquest"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+  server:
+    build: { context: ., dockerfile: apps/server/Dockerfile }
+    env_file: .env
+    environment: { DATABASE_URL: postgresql://cyberquest:cyberquest@postgres:5432/cyberquest, REDIS_URL: redis://redis:6379 }
+    ports: ["3000:3000"]
+    depends_on: { postgres: { condition: service_healthy }, redis: { condition: service_started } }
+  web:
+    build: { context: ., dockerfile: apps/web/Dockerfile }
+    ports: ["5173:80"]
+    depends_on: [server]
+volumes: { postgres_data: {} }
+networks: { default: { name: cyberquest_lab_net } }

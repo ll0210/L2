@@ -1,0 +1,202 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+enum Category {
+  WEB
+  CRYPTO
+  REVERSE
+  PWN
+  FORENSICS
+  NETWORK
+  MISC
+}
+enum LabStatus {
+  STOPPED
+  STARTING
+  RUNNING
+  EXPIRED
+  FAILED
+}
+enum SkillStatus {
+  LOCKED
+  AVAILABLE
+  LEARNING
+  MASTERED
+}
+
+model User {
+  id String @id @default(cuid())
+  username String @unique
+  email String @unique
+  passwordHash String
+  avatar String?
+  role Role @default(USER)
+  score Int @default(0)
+  xp Int @default(0)
+  level Int @default(1)
+  createdAt DateTime @default(now())
+  lastLoginAt DateTime?
+  solves ChallengeSolve[]
+  attempts ChallengeAttempt[]
+  skills UserSkill[]
+  labs LabInstance[]
+  activities Activity[]
+  notifications Notification[]
+  @@index([role])
+  @@index([score])
+}
+model Challenge {
+  id String @id @default(cuid())
+  slug String @unique
+  title String
+  description String
+  category Category
+  difficulty String
+  points Int
+  flagHash String
+  author String @default("CyberQuest Team")
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
+  solves ChallengeSolve[]
+  attempts ChallengeAttempt[]
+  hints ChallengeHint[]
+  skills ChallengeSkill[]
+  labs LabInstance[]
+  @@index([category,difficulty])
+  @@index([isActive])
+}
+model ChallengeSolve {
+  id String @id @default(cuid())
+  userId String
+  challengeId String
+  points Int
+  solvedAt DateTime @default(now())
+  isFirstBlood Boolean @default(false)
+  user User @relation(fields:[userId],references:[id])
+  challenge Challenge @relation(fields:[challengeId],references:[id])
+  @@unique([userId,challengeId])
+  @@index([challengeId,solvedAt])
+}
+model ChallengeAttempt {
+  id String @id @default(cuid())
+  userId String
+  challengeId String
+  submittedHash String
+  correct Boolean
+  createdAt DateTime @default(now())
+  ipHash String?
+  user User @relation(fields:[userId],references:[id])
+  challenge Challenge @relation(fields:[challengeId],references:[id])
+  @@index([userId,createdAt])
+  @@index([challengeId,createdAt])
+}
+model ChallengeHint {
+  id String @id @default(cuid())
+  challengeId String
+  title String
+  content String
+  cost Int @default(0)
+  order Int
+  challenge Challenge @relation(fields:[challengeId],references:[id])
+  users UserHint[]
+  @@unique([challengeId,order])
+}
+model UserHint {
+  userId String
+  hintId String
+  unlockedAt DateTime @default(now())
+  hint ChallengeHint @relation(fields:[hintId],references:[id])
+  @@id([userId,hintId])
+  @@unique([userId,hintId])
+}
+model Skill {
+  id String @id @default(cuid())
+  name String
+  slug String @unique
+  description String
+  category String
+  parentId String?
+  x Float @default(0)
+  y Float @default(0)
+  users UserSkill[]
+  challenges ChallengeSkill[]
+}
+model UserSkill {
+  userId String
+  skillId String
+  xp Int @default(0)
+  level Int @default(0)
+  status SkillStatus @default(AVAILABLE)
+  updatedAt DateTime @updatedAt
+  user User @relation(fields:[userId],references:[id])
+  skill Skill @relation(fields:[skillId],references:[id])
+  @@id([userId,skillId])
+  @@unique([userId,skillId])
+}
+model ChallengeSkill {
+  challengeId String
+  skillId String
+  xpReward Int
+  challenge Challenge @relation(fields:[challengeId],references:[id])
+  skill Skill @relation(fields:[skillId],references:[id])
+  @@id([challengeId,skillId])
+  @@unique([challengeId,skillId])
+}
+model LabInstance {
+  id String @id @default(cuid())
+  userId String
+  challengeId String
+  containerId String?
+  status LabStatus @default(STOPPED)
+  ip String?
+  port Int?
+  startedAt DateTime?
+  expiresAt DateTime
+  stoppedAt DateTime?
+  user User @relation(fields:[userId],references:[id])
+  challenge Challenge @relation(fields:[challengeId],references:[id])
+  @@index([userId,status])
+  @@index([expiresAt])
+}
+model Activity {
+  id String @id @default(cuid())
+  userId String
+  type String
+  metadata Json?
+  createdAt DateTime @default(now())
+  user User @relation(fields:[userId],references:[id])
+  @@index([type,createdAt])
+  @@index([userId,createdAt])
+}
+model Notification {
+  id String @id @default(cuid())
+  userId String
+  type String
+  title String
+  message String
+  read Boolean @default(false)
+  createdAt DateTime @default(now())
+  user User @relation(fields:[userId],references:[id])
+  @@index([userId,read])
+}
+model Course {
+  id String @id @default(cuid())
+  title String
+  slug String @unique
+  description String
+  difficulty String
+  duration String
+  category String
+  isPublished Boolean @default(true)
+  @@index([category])
+}

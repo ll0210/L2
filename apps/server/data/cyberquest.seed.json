@@ -1,0 +1,126 @@
+{
+  "users": [
+    {
+      "id": "u_demo",
+      "username": "演示学员",
+      "email": "demo@cyberquest.local",
+      "passwordHash": "$argon2id$v=19$m=65536,t=3,p=4$uKAaMMQ6kIEwfn+WgDt43A$vst2XEh/hskWbj92Smg9tQjWmixTn4UtUTx4VvGSRxo",
+      "role": "USER",
+      "score": 0,
+      "xp": 0,
+      "level": 1,
+      "solved": [],
+      "skills": {},
+      "activities": [],
+      "unlockedHints": {}
+    },
+    {
+      "id": "u_admin",
+      "username": "管理员",
+      "email": "admin@cyberquest.local",
+      "passwordHash": "$argon2id$v=19$m=65536,t=3,p=4$uKAaMMQ6kIEwfn+WgDt43A$vst2XEh/hskWbj92Smg9tQjWmixTn4UtUTx4VvGSRxo",
+      "role": "ADMIN",
+      "score": 0,
+      "xp": 0,
+      "level": 1,
+      "solved": [],
+      "skills": {},
+      "activities": [],
+      "unlockedHints": {}
+    }
+  ],
+  "challenges": [
+    {
+      "id": "c_1",
+      "slug": "web-101",
+      "title": "参数迷踪",
+      "category": "WEB",
+      "difficulty": "EASY",
+      "points": 100,
+      "description": "在一段教学用 HTTP 请求记录中，辨别客户端提交的数据与服务端生成的数据。",
+      "goal": "找出请求中可控的字段，并说明为什么服务端不能直接信任它。",
+      "flagHash": "2628cfaac8eb24d437f78a662637f36baa86729a364ac87a59bc88cf0f2cb2f2",
+      "skills": [{ "slug": "http", "xp": 80 }],
+      "solves": [],
+      "hints": [{ "title": "从题目目标开始", "content": "先将目标拆成输入、处理、输出三部分，避免直接猜测。", "cost": 0 }, { "title": "记录可验证的证据", "content": "每得到一个结论，都写下它来自哪一段材料或哪一次受控观察。", "cost": 20 }]
+    },
+    {
+      "id": "c_2",
+      "slug": "web-102",
+      "title": "会话足迹",
+      "category": "WEB",
+      "difficulty": "EASY",
+      "points": 120,
+      "description": "通过一个最小化登录案例，理解 Cookie 属性如何保护会话。",
+      "goal": "识别哪一种 Cookie 配置会减少脚本窃取会话的风险。",
+      "flagHash": "c456edd7f44a6ac03e47d38525aba27cbee60cbd149a36e79c6e55ed8f53cf7e",
+      "skills": [{ "slug": "http", "xp": 90 }],
+      "solves": [],
+      "hints": [{ "title": "从题目目标开始", "content": "先将目标拆成输入、处理、输出三部分，避免直接猜测。", "cost": 0 }, { "title": "记录可验证的证据", "content": "每得到一个结论，都写下它来自哪一段材料或哪一次受控观察。", "cost": 20 }]
+    },
+    {
+      "id": "c_3",
+      "slug": "crypto-101",
+      "title": "编码接力",
+      "category": "CRYPTO",
+      "difficulty": "EASY",
+      "points": 100,
+      "description": "识别十六进制与 Base64 编码，恢复题目中的短消息。",
+      "goal": "按正确顺序完成两次解码，并记录每一步依据。",
+      "flagHash": "0f02fea27dbc2cda8be779373337ae79a9a28575097a9ba0c3f15644a06e01f6",
+      "skills": [{ "slug": "crypto-basics", "xp": 80 }],
+      "solves": [],
+      "hints": [{ "title": "从题目目标开始", "content": "先将目标拆成输入、处理、输出三部分，避免直接猜测。", "cost": 0 }, { "title": "记录可验证的证据", "content": "每得到一个结论，都写下它来自哪一段材料或哪一次受控观察。", "cost": 20 }]
+    },
+    {
+      "id": "c_4",
+      "slug": "network-101",
+      "title": "数据包明信片",
+      "category": "NETWORK",
+      "difficulty": "EASY",
+      "points": 100,
+      "description": "阅读合成 DNS 与 HTTP 流量摘要，定位异常请求。",
+      "goal": "从域名、时序和响应码中选出最需要复核的一项。",
+      "flagHash": "64b3b2b1c52d3cdc4e9499c838d4b39618c97d352c03ee98cf1742cfa210302d",
+      "skills": [{ "slug": "packet-analysis", "xp": 90 }],
+      "solves": [],
+      "hints": [{ "title": "从题目目标开始", "content": "先将目标拆成输入、处理、输出三部分，避免直接猜测。", "cost": 0 }, { "title": "记录可验证的证据", "content": "每得到一个结论，都写下它来自哪一段材料或哪一次受控观察。", "cost": 20 }]
+    },
+    {
+      "id": "c_5",
+      "slug": "reverse-101",
+      "title": "字符串理论",
+      "category": "REVERSE",
+      "difficulty": "EASY",
+      "points": 150,
+      "description": "在无害示例程序的字符串清单中建立功能假设。",
+      "goal": "先从可读字符串推断程序意图，再决定是否需要调试。",
+      "flagHash": "fa5c088ac7e10618109ff2d7678d57b08817ed06c53b1cc4b305c2ebf5872028",
+      "skills": [{ "slug": "reverse-basics", "xp": 100 }],
+      "solves": [],
+      "hints": [{ "title": "从题目目标开始", "content": "先将目标拆成输入、处理、输出三部分，避免直接猜测。", "cost": 0 }, { "title": "记录可验证的证据", "content": "每得到一个结论，都写下它来自哪一段材料或哪一次受控观察。", "cost": 20 }]
+    },
+    {
+      "id": "c_6",
+      "slug": "pwn-101",
+      "title": "栈的故事",
+      "category": "PWN",
+      "difficulty": "MEDIUM",
+      "points": 250,
+      "description": "通过伪代码理解长度检查为什么是内存安全的第一道门。",
+      "goal": "指出缺失边界检查的位置，并给出安全的修复原则。",
+      "flagHash": "a49646fa4d21b1838f76e6454781056758d6c75cd3e9cec45625340a03ca8fcc",
+      "skills": [{ "slug": "memory-safety", "xp": 120 }],
+      "solves": [],
+      "hints": [{ "title": "从题目目标开始", "content": "先将目标拆成输入、处理、输出三部分，避免直接猜测。", "cost": 0 }, { "title": "记录可验证的证据", "content": "每得到一个结论，都写下它来自哪一段材料或哪一次受控观察。", "cost": 20 }]
+    }
+  ],
+  "attempts": [],
+  "labs": [],
+  "courses": [
+    { "id": "course-web", "title": "网页安全基础", "level": "初级", "duration": "3 小时", "description": "理解 HTTP 请求、Cookie、会话与信任边界。", "chapters": ["请求从哪里来", "会话如何保持", "输入为什么不可信"], "challengeSlug": "web-101" },
+    { "id": "course-net", "title": "网络防御入门", "level": "初级", "duration": "2 小时", "description": "从流量、协议和网络分段理解防御者的视角。", "chapters": ["读懂一次连接", "识别异常模式", "建立最小防护面"], "challengeSlug": "network-101" },
+    { "id": "course-ctf", "title": "CTF 解题方法论", "level": "中级", "duration": "4 小时", "description": "用观察、验证、记录与复盘构建可迁移的解题方法。", "chapters": ["阅读任务边界", "提出可检验假设", "写出复盘笔记"], "challengeSlug": "crypto-101" }
+  ]
+}
+

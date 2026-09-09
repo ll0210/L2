@@ -1,0 +1,15 @@
+{
+  "name": "cyberquest-2",
+  "private": true,
+  "version": "2.0.0",
+  "packageManager": "pnpm@9.15.5",
+  "scripts": {
+    "dev": "corepack pnpm --parallel --filter @cyberquest/server --filter @cyberquest/web dev",
+    "build": "corepack pnpm --filter @cyberquest/shared build && corepack pnpm --filter @cyberquest/server build && corepack pnpm --filter @cyberquest/web build",
+    "db:generate": "corepack pnpm --filter @cyberquest/server prisma:generate",
+    "db:push": "corepack pnpm --filter @cyberquest/server prisma:push",
+    "db:seed": "corepack pnpm --filter @cyberquest/server prisma:seed",
+    "verify:demo": "node scripts/verify-demo.mjs"
+  },
+  "devDependencies": { "typescript": "^5.7.3" }
+}

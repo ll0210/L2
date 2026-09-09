@@ -1,0 +1,1210 @@
+/*
+ * Challenge workbench
+ *
+ * The page follows the hierarchy used by practical CTF interfaces:
+ * a single, focused challenge surface on the left and a compact context rail
+ * on the right.  It deliberately replaces the former three-column card wall.
+ */
+
+.focus-workspace {
+  --wb-ink: #17233d;
+  --wb-copy: #5e6d88;
+  --wb-muted: #8692aa;
+  --wb-line: #e4e9f2;
+  --wb-paper: #ffffff;
+  --wb-canvas: #f5f7fb;
+  --wb-blue: #3656e9;
+  --wb-blue-dark: #2744c8;
+  --wb-blue-wash: #f0f4ff;
+  --wb-green: #208861;
+  --wb-green-wash: #eefaf4;
+  width: min(1280px, calc(100% - 48px));
+  max-width: 1280px;
+  padding: 38px 0 80px;
+}
+
+.focus-workspace .challenge-banner {
+  display: flex;
+  min-height: 0;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 0 2px 22px;
+  border-bottom: 1px solid var(--wb-line);
+}
+
+.focus-workspace .challenge-banner h1 {
+  margin: 7px 0 8px;
+  color: var(--wb-ink);
+  font-size: clamp(32px, 3.5vw, 46px);
+  letter-spacing: -2px;
+  line-height: 1.12;
+}
+
+.focus-workspace .challenge-banner .task-title > p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--wb-copy);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.focus-workspace .challenge-banner .eyebrow,
+.focus-workspace .eyebrow {
+  color: #5268bd;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.focus-workspace .banner-tags {
+  margin-top: 13px;
+  gap: 6px;
+}
+
+.focus-workspace .banner-tags i {
+  padding: 4px 8px;
+  border: 1px solid #dfe5f2;
+  border-radius: 999px;
+  background: #fafcff;
+  color: #61708c;
+  font-size: 10px;
+  font-style: normal;
+}
+
+.focus-workspace .banner-score {
+  display: grid;
+  min-width: 118px;
+  grid-template-columns: auto auto;
+  align-items: end;
+  column-gap: 8px;
+  padding: 11px 0 10px 20px;
+  border-left: 1px solid var(--wb-line);
+  background: transparent;
+  box-shadow: none;
+}
+
+.focus-workspace .banner-score::before,
+.focus-workspace .banner-score::after {
+  display: none;
+}
+
+.focus-workspace .banner-score span {
+  grid-column: 1 / -1;
+  color: var(--wb-muted);
+  font-size: 10px;
+}
+
+.focus-workspace .banner-score b {
+  color: var(--wb-ink);
+  font: 800 32px/1 "JetBrains Mono", monospace;
+  letter-spacing: -2px;
+}
+
+.focus-workspace .banner-score em {
+  align-self: center;
+  padding: 4px 7px;
+  border-radius: 99px;
+  background: #f3f5f9;
+  color: #73809a;
+  font-size: 10px;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.focus-workspace .banner-score em.done {
+  background: var(--wb-green-wash);
+  color: var(--wb-green);
+}
+
+.focus-workspace .workspace-layout.challenge-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-areas: "challenge context";
+  gap: 22px;
+  align-items: start;
+  margin-top: 24px;
+}
+
+.focus-workspace .challenge-surface {
+  grid-area: challenge;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--wb-line);
+  border-radius: 16px;
+  background: var(--wb-paper);
+  box-shadow: 0 16px 38px rgba(25, 42, 76, 0.06);
+}
+
+.focus-workspace .challenge-surface .goal-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-width: 0;
+  gap: 24px;
+  align-items: center;
+  margin: 0;
+  padding: 22px 26px 20px;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid var(--wb-line);
+  background: linear-gradient(105deg, #ffffff 0%, #fbfcff 100%);
+  box-shadow: none;
+}
+
+.focus-workspace .challenge-surface .goal-panel::before {
+  display: none;
+}
+
+.focus-workspace .challenge-surface .goal-panel h2 {
+  max-width: 840px;
+  margin: 6px 0 0;
+  color: var(--wb-ink);
+  font-size: 20px;
+  font-weight: 750;
+  letter-spacing: -0.7px;
+  line-height: 1.5;
+}
+
+.focus-workspace .challenge-surface .goal-status {
+  display: grid;
+  min-width: 92px;
+  align-content: center;
+  gap: 5px;
+  padding-left: 20px;
+  border-left: 1px solid var(--wb-line);
+}
+
+.focus-workspace .goal-status span {
+  color: var(--wb-muted);
+  font-size: 10px;
+}
+
+.focus-workspace .goal-status b {
+  color: var(--wb-blue);
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.focus-workspace .workspace-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--wb-line);
+  background: #fbfcfe;
+}
+
+.focus-workspace .workspace-tabs button {
+  position: relative;
+  display: grid;
+  min-width: 128px;
+  min-height: 64px;
+  align-content: center;
+  justify-items: start;
+  gap: 2px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #78849a;
+  font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  text-align: left;
+}
+
+.focus-workspace .workspace-tabs button:hover {
+  transform: none;
+  filter: none;
+  color: var(--wb-ink);
+}
+
+.focus-workspace .workspace-tabs button::after {
+  position: absolute;
+  right: 12px;
+  bottom: -1px;
+  left: 12px;
+  height: 2px;
+  border-radius: 3px 3px 0 0;
+  background: transparent;
+  content: "";
+}
+
+.focus-workspace .workspace-tabs button.active {
+  color: var(--wb-ink);
+}
+
+.focus-workspace .workspace-tabs button.active::after {
+  background: var(--wb-blue);
+}
+
+.focus-workspace .workspace-tabs button span {
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.focus-workspace .workspace-tabs button small {
+  color: #9ba5b7;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.focus-workspace .work-main {
+  display: block;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--wb-paper);
+  box-shadow: none;
+}
+
+.focus-workspace .work-main-header {
+  display: flex;
+  min-height: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 23px 26px 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.focus-workspace .work-main-header h2 {
+  margin: 5px 0 0;
+  color: var(--wb-ink);
+  font-size: 23px;
+  letter-spacing: -1px;
+}
+
+.focus-workspace .submission-count {
+  padding: 5px 8px;
+  border: 1px solid #e5eafa;
+  border-radius: 999px;
+  background: #f7f9fe;
+  color: #64739a;
+  font: 600 10px "JetBrains Mono", monospace;
+  white-space: nowrap;
+}
+
+.focus-workspace .solve-flow {
+  margin: 0;
+  padding: 16px 26px 24px;
+  border: 0;
+  background: transparent;
+}
+
+.focus-workspace .solve-flow > header {
+  display: none;
+}
+
+.focus-workspace .solve-flow ol {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.focus-workspace .solve-flow li {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: 33px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 15px 0;
+  border: 0;
+  border-top: 1px solid #edf0f5;
+  border-radius: 0;
+  background: transparent;
+}
+
+.focus-workspace .solve-flow li:hover {
+  border-color: #edf0f5;
+  background: transparent;
+}
+
+.focus-workspace .solve-flow li i {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid #dce4fa;
+  border-radius: 8px;
+  background: var(--wb-blue-wash);
+  color: var(--wb-blue);
+  font: 700 10px "JetBrains Mono", monospace;
+}
+
+.focus-workspace .solve-flow li b {
+  color: var(--wb-ink);
+  font-size: 14px;
+}
+
+.focus-workspace .solve-flow li p {
+  margin: 4px 0 0;
+  color: var(--wb-copy);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.focus-workspace .submit-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 9px;
+  padding: 6px;
+  border: 1px solid #dfe5f0;
+  border-radius: 10px;
+  background: #fafbfe;
+}
+
+.focus-workspace .submit-row input {
+  min-width: 0;
+  min-height: 40px;
+  flex: 1;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--wb-ink);
+  font: 12px "JetBrains Mono", monospace;
+  outline: 0;
+}
+
+.focus-workspace .submit-row input:focus {
+  box-shadow: none;
+}
+
+.focus-workspace .submit-row button,
+.focus-workspace .session-controls button,
+.focus-workspace .tutor-card > button {
+  min-height: 39px;
+  border-radius: 8px;
+  background: var(--wb-blue);
+  box-shadow: 0 7px 14px rgba(54, 86, 233, 0.16);
+  font-size: 12px;
+}
+
+.focus-workspace .submit-row button:hover,
+.focus-workspace .session-controls button:hover,
+.focus-workspace .tutor-card > button:hover {
+  transform: translateY(-1px);
+  background: var(--wb-blue-dark);
+  filter: none;
+}
+
+.focus-workspace .result {
+  margin: 0 26px 22px;
+  padding: 10px 12px;
+  border: 1px solid #e2e6ef;
+  border-left: 3px solid #aeb8cd;
+  border-radius: 8px;
+  background: #fafbfc;
+  font-size: 12px;
+}
+
+.focus-workspace .result.good {
+  border-color: #ccebdc;
+  border-left-color: var(--wb-green);
+  background: var(--wb-green-wash);
+  color: #287355;
+}
+
+.focus-workspace .result.error {
+  border-color: #f1d9dd;
+  border-left-color: #c25061;
+  background: #fff7f7;
+  color: #a54b58;
+}
+
+.focus-workspace .completion-panel {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 13px;
+  align-items: center;
+  margin: 16px 26px 0;
+  padding: 17px;
+  border: 1px solid #ccebdc;
+  border-radius: 11px;
+  background: var(--wb-green-wash);
+  box-shadow: none;
+}
+
+.focus-workspace .completion-panel::after {
+  display: none;
+}
+
+.focus-workspace .completion-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--wb-green);
+  box-shadow: none;
+  color: #fff;
+  font-size: 16px;
+}
+
+.focus-workspace .completion-panel b {
+  color: #175c41;
+  font-size: 15px;
+}
+
+.focus-workspace .completion-panel p {
+  margin: 4px 0 0;
+  color: #5d7d6c;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.focus-workspace .completion-actions {
+  display: flex;
+  min-width: max-content;
+  gap: 7px;
+  margin: 0;
+}
+
+.focus-workspace .completion-actions > a,
+.focus-workspace .completion-actions > button {
+  display: grid;
+  min-height: 34px;
+  place-items: center;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.focus-workspace .completion-actions > a {
+  background: var(--wb-blue);
+  color: #fff;
+  box-shadow: 0 6px 13px rgba(54, 86, 233, 0.14);
+}
+
+.focus-workspace .outline,
+.focus-workspace .completion-actions .outline {
+  border: 1px solid #dce3f0;
+  background: #fff;
+  box-shadow: none;
+  color: #52627e;
+}
+
+.focus-workspace .outline:hover,
+.focus-workspace .completion-actions .outline:hover {
+  transform: none;
+  border-color: #aab6cd;
+  background: #f8faff;
+  color: var(--wb-ink);
+  filter: none;
+}
+
+.focus-workspace .review-panel {
+  margin: 19px 26px 26px;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid var(--wb-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.focus-workspace .review-panel .eyebrow {
+  display: block;
+  margin-top: 18px;
+}
+
+.focus-workspace .review-panel h2 {
+  margin: 5px 0 10px;
+  color: var(--wb-ink);
+  font-size: 18px;
+}
+
+.focus-workspace .review-panel > div {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 0;
+}
+
+.focus-workspace .review-panel p {
+  margin: 0;
+  padding: 10px 0;
+  border: 0;
+  border-top: 1px solid #edf0f4;
+  border-radius: 0;
+  background: transparent;
+  color: var(--wb-copy);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.focus-workspace .review-panel i {
+  display: inline;
+  margin-right: 8px;
+  color: var(--wb-blue);
+  font: 700 10px "JetBrains Mono", monospace;
+}
+
+.focus-workspace .access-panel {
+  min-height: 315px;
+  padding: 0 26px 24px;
+  border: 0;
+  border-radius: 0;
+  background: var(--wb-paper);
+  box-shadow: none;
+}
+
+.focus-workspace .access-panel::before {
+  display: none;
+}
+
+.focus-workspace .access-panel > header {
+  display: flex;
+  min-height: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 21px 0 14px;
+  border-bottom: 1px solid var(--wb-line);
+  background: transparent;
+  box-shadow: none;
+  position: static;
+}
+
+.focus-workspace .access-panel > header small {
+  color: var(--wb-muted);
+  font-size: 10px;
+}
+
+.focus-workspace .access-item {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 17px 0;
+  border: 0;
+  border-bottom: 1px solid #edf0f4;
+  background: transparent;
+}
+
+.focus-workspace .access-item + .access-item {
+  margin: 0;
+  border-top: 0;
+}
+
+.focus-workspace .access-item:hover {
+  background: transparent;
+}
+
+.focus-workspace .access-mark {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 9px;
+  background: #edf4ff;
+  box-shadow: none;
+  color: #3975b8;
+  font-size: 18px;
+}
+
+.focus-workspace .access-item.file .access-mark {
+  background: #f4efff;
+  color: #795cb1;
+}
+
+.focus-workspace .access-item small {
+  display: block;
+  color: #7c8aa2;
+  font-size: 10px;
+}
+
+.focus-workspace .access-item b {
+  display: block;
+  margin: 3px 0;
+  color: var(--wb-ink);
+  font-size: 14px;
+}
+
+.focus-workspace .access-item p {
+  margin: 0;
+  color: var(--wb-copy);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.focus-workspace .access-item code {
+  display: block;
+  max-width: min(430px, 48vw);
+  margin-top: 5px;
+  overflow: hidden;
+  color: #54709a;
+  font: 10px "JetBrains Mono", monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.focus-workspace .access-actions {
+  display: flex;
+  min-width: max-content;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  padding: 0;
+}
+
+.focus-workspace .access-actions a,
+.focus-workspace .access-item > a {
+  display: inline-grid;
+  min-height: 33px;
+  place-items: center;
+  padding: 6px 9px;
+  border-radius: 7px;
+  background: var(--wb-blue);
+  box-shadow: 0 6px 13px rgba(54, 86, 233, 0.14);
+  color: #fff;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.focus-workspace .access-actions a:hover,
+.focus-workspace .access-item > a:hover {
+  transform: translateY(-1px);
+  background: var(--wb-blue-dark);
+  box-shadow: 0 8px 16px rgba(54, 86, 233, 0.2);
+}
+
+.focus-workspace .access-actions .outline {
+  min-height: 33px;
+  padding: 5px 8px;
+}
+
+.focus-workspace .target-health {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 4px 7px;
+  border: 1px solid #e4e8ee;
+  border-radius: 999px;
+  background: #f7f8fa;
+  color: #78849a;
+  font-size: 10px;
+}
+
+.focus-workspace .target-health.ready {
+  border-color: #cdebdc;
+  background: var(--wb-green-wash);
+  color: var(--wb-green);
+}
+
+.focus-workspace .target-health.error {
+  border-color: #f3d9de;
+  background: #fff5f6;
+  color: #b14e5c;
+}
+
+.focus-workspace .resource-note {
+  display: flex;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 10px 11px;
+  border: 1px solid #e4e8ef;
+  border-radius: 8px;
+  background: #fafbfc;
+  color: #77849a;
+}
+
+.focus-workspace .resource-note::before {
+  display: none;
+}
+
+.focus-workspace .resource-note span {
+  color: #53647e;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.focus-workspace .resource-note small {
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.focus-workspace .resource-empty {
+  padding: 42px 6px 34px;
+  text-align: center;
+}
+
+.focus-workspace .resource-empty b {
+  color: var(--wb-ink);
+  font-size: 14px;
+}
+
+.focus-workspace .resource-empty p {
+  margin: 7px 0 0;
+  color: var(--wb-copy);
+  font-size: 12px;
+}
+
+.focus-workspace .terminal-block {
+  min-height: 315px;
+  margin: 0;
+  padding: 22px 24px;
+  border: 0;
+  border-radius: 0;
+  background: #151e33;
+  box-shadow: none;
+}
+
+.focus-workspace .terminal-block::before {
+  display: none;
+}
+
+.focus-workspace .terminal-block > header {
+  display: flex;
+  min-height: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 13px;
+  border-bottom: 1px solid rgba(210, 224, 255, 0.14);
+  background: transparent;
+  box-shadow: none;
+  position: static;
+}
+
+.focus-workspace .terminal-block header b {
+  display: block;
+  color: #f2f6ff;
+  font-size: 14px;
+}
+
+.focus-workspace .terminal-block header small {
+  display: block;
+  margin-top: 3px;
+  color: #91a1c2;
+  font-size: 10px;
+}
+
+.focus-workspace .terminal-block header > span {
+  color: #81e2b5;
+  font: 700 10px "JetBrains Mono", monospace;
+  letter-spacing: 1px;
+}
+
+.focus-workspace .terminal-block pre {
+  height: 184px;
+  margin: 14px 0;
+  overflow: auto;
+  color: #d5dfef;
+  font: 12px/1.7 "JetBrains Mono", monospace;
+  white-space: pre-wrap;
+}
+
+.focus-workspace .terminal-block input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 11px;
+  border: 1px solid #354362;
+  border-radius: 7px;
+  background: #0d1425;
+  color: #e8effb;
+  font: 11px "JetBrains Mono", monospace;
+}
+
+.focus-workspace .terminal-block input:focus {
+  border-color: #6581ff;
+  box-shadow: 0 0 0 3px rgba(101, 129, 255, 0.15);
+}
+
+.focus-workspace .work-context {
+  display: flex;
+  grid-area: context;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.focus-workspace .session-card,
+.focus-workspace .hints-card,
+.focus-workspace .tutor-card {
+  position: static;
+  padding: 17px;
+  border: 1px solid var(--wb-line);
+  border-radius: 14px;
+  background: var(--wb-paper);
+  box-shadow: 0 8px 20px rgba(25, 42, 76, 0.035);
+}
+
+.focus-workspace .live-session-card {
+  border-top: 3px solid #47b98a;
+}
+
+.focus-workspace .session-card::before,
+.focus-workspace .tutor-card::before {
+  display: none;
+}
+
+.focus-workspace .session-card > header,
+.focus-workspace .hints-card > header {
+  display: flex;
+  min-height: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 11px;
+  border-bottom: 1px solid var(--wb-line);
+  background: transparent;
+  box-shadow: none;
+  position: static;
+}
+
+.focus-workspace .session-card > header em,
+.focus-workspace .hints-card > header em {
+  color: var(--wb-green);
+  font-size: 10px;
+  font-style: normal;
+}
+
+.focus-workspace .live-session-card .session-meter {
+  margin: 13px 0 0;
+  padding: 0 0 12px;
+  border: 0;
+  border-bottom: 1px solid var(--wb-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.focus-workspace .live-session-card .session-meter > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.focus-workspace .live-session-card .session-meter span {
+  color: var(--wb-copy);
+  font-size: 11px;
+}
+
+.focus-workspace .live-session-card .session-meter b {
+  color: var(--wb-ink);
+  font: 800 21px/1 "JetBrains Mono", monospace;
+}
+
+.focus-workspace .live-session-card .session-meter p {
+  margin: 8px 0 0;
+  color: var(--wb-copy);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.focus-workspace .session-controls {
+  display: flex;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.focus-workspace .session-controls button {
+  flex: 1;
+}
+
+.focus-workspace .session-controls .outline.danger {
+  border-color: #f0d9de;
+  background: #fff;
+  color: #ab5260;
+}
+
+.focus-workspace .attempt-box {
+  margin-top: 14px;
+  padding-top: 0;
+  border: 0;
+}
+
+.focus-workspace .attempt-box > span {
+  color: var(--wb-muted);
+  font-size: 10px;
+}
+
+.focus-workspace .attempt-box > b {
+  float: right;
+  color: var(--wb-ink);
+  font-size: 12px;
+}
+
+.focus-workspace .attempt-box p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 0;
+  color: var(--wb-copy);
+  font-size: 11px;
+}
+
+.focus-workspace .attempt-box p i {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c8d0df;
+}
+
+.focus-workspace .attempt-box p i.ok {
+  background: #55c995;
+}
+
+.focus-workspace .attempt-box p time {
+  margin-left: auto;
+  color: #9aa4b5;
+  font: 10px "JetBrains Mono", monospace;
+}
+
+.focus-workspace .hints-card article {
+  display: flex;
+  gap: 10px;
+  align-items: start;
+  justify-content: space-between;
+  padding: 13px 0;
+  border-top: 1px solid var(--wb-line);
+}
+
+.focus-workspace .hints-card article:first-of-type {
+  border-top: 0;
+}
+
+.focus-workspace .hints-card article small {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--wb-muted);
+  font-size: 10px;
+}
+
+.focus-workspace .hints-card article b {
+  display: block;
+  color: var(--wb-ink);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.focus-workspace .hints-card article p {
+  margin: 8px 0 0;
+  padding: 8px 9px;
+  border-left: 2px solid #6ac89d;
+  border-radius: 0 6px 6px 0;
+  background: var(--wb-green-wash);
+  color: #42745d;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.focus-workspace .hints-card article > span {
+  padding-top: 2px;
+  color: var(--wb-green);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.focus-workspace .hints-card article .outline {
+  min-height: 28px;
+  padding: 4px 7px;
+  border-color: #dce3f6;
+  color: #5369aa;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.focus-workspace .tutor-card .eyebrow {
+  color: #7359a8;
+}
+
+.focus-workspace .tutor-card h3 {
+  margin: 8px 0 5px;
+  color: var(--wb-ink);
+  font-size: 18px;
+  letter-spacing: -0.6px;
+}
+
+.focus-workspace .tutor-card > p {
+  margin: 0;
+  color: var(--wb-copy);
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.focus-workspace .tutor-card textarea {
+  width: 100%;
+  min-height: 92px;
+  margin-top: 13px;
+  padding: 9px 10px;
+  border: 1px solid #dfe5ef;
+  border-radius: 8px;
+  background: #fbfcff;
+  color: var(--wb-ink);
+  font: 11px/1.6 "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  outline: 0;
+  resize: vertical;
+}
+
+.focus-workspace .tutor-card textarea:focus {
+  border-color: #8da0f4;
+  box-shadow: 0 0 0 3px rgba(54, 86, 233, 0.08);
+}
+
+.focus-workspace .tutor-card > button {
+  width: 100%;
+  margin-top: 7px;
+}
+
+.focus-workspace .tutor-card .tutor-answer {
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid var(--wb-line);
+  color: #4e6482;
+}
+
+@media (max-width: 980px) {
+  .focus-workspace .workspace-layout.challenge-workbench {
+    grid-template-columns: minmax(0, 1fr) 282px;
+    gap: 16px;
+  }
+
+  .focus-workspace .workspace-tabs button {
+    min-width: 112px;
+    padding-right: 9px;
+    padding-left: 9px;
+  }
+
+  .focus-workspace .access-item {
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+
+  .focus-workspace .access-actions,
+  .focus-workspace .access-item > a {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 760px) {
+  .focus-workspace {
+    width: min(100% - 28px, 640px);
+    padding-top: 27px;
+  }
+
+  .focus-workspace .challenge-banner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .focus-workspace .banner-score {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    border-left: 0;
+  }
+
+  .focus-workspace .workspace-layout.challenge-workbench {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "challenge"
+      "context";
+  }
+
+  .focus-workspace .work-context {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .focus-workspace .tutor-card {
+    grid-column: 1 / -1;
+  }
+
+  .focus-workspace .access-item code {
+    max-width: 54vw;
+  }
+}
+
+@media (max-width: 560px) {
+  .focus-workspace .challenge-surface .goal-panel {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .focus-workspace .challenge-surface .goal-status {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 11px 0 0;
+    border-top: 1px solid var(--wb-line);
+    border-left: 0;
+  }
+
+  .focus-workspace .workspace-tabs {
+    overflow-x: auto;
+    padding: 0 8px;
+  }
+
+  .focus-workspace .workspace-tabs button {
+    min-width: 118px;
+  }
+
+  .focus-workspace .work-main-header,
+  .focus-workspace .solve-flow,
+  .focus-workspace .access-panel,
+  .focus-workspace .terminal-block {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .focus-workspace .work-main-header h2 {
+    font-size: 20px;
+  }
+
+  .focus-workspace .submission-count {
+    display: none;
+  }
+
+  .focus-workspace .completion-panel {
+    grid-template-columns: 34px minmax(0, 1fr);
+    margin-right: 18px;
+    margin-left: 18px;
+  }
+
+  .focus-workspace .completion-actions {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .focus-workspace .completion-actions > a,
+  .focus-workspace .completion-actions > button {
+    flex: 1;
+  }
+
+  .focus-workspace .review-panel,
+  .focus-workspace .result {
+    margin-right: 18px;
+    margin-left: 18px;
+  }
+
+  .focus-workspace .work-context {
+    grid-template-columns: 1fr;
+  }
+
+  .focus-workspace .tutor-card {
+    grid-column: auto;
+  }
+
+  .focus-workspace .access-item {
+    grid-template-columns: 36px minmax(0, 1fr);
+  }
+
+  .focus-workspace .access-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .focus-workspace .target-health {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
